@@ -3,11 +3,8 @@ import os
 import time
 from sodapy import Socrata
 from datetime import datetime, timedelta
+import config
 
-# --- CONFIGURATION ---
-DOMAIN = "data.cityofnewyork.us"
-DATASET_ID = "erm2-nwe9" # 311 Service Requests
-APP_TOKEN = os.getenv("NYC_APP_TOKEN") 
 
 # LOOKBACK WINDOW:
 # Set to 7 days because NYC Open Data often has a 1-3 day lag 
@@ -20,14 +17,14 @@ def fetch_311_data():
     from the NYC Open Data API.
     """
     print(f"--- Starting 311 Scraper ---")
-    print(f"Target: {DOMAIN}")
+    print(f"Target: {config.DOMAIN}")
     
-    if APP_TOKEN:
+    if config.APP_TOKEN:
         print("Auth Status: Authenticated (High Throughput)")
-        client = Socrata(DOMAIN, APP_TOKEN)
+        client = Socrata(config.DOMAIN, config.APP_TOKEN)
     else:
         print("Auth Status: Anonymous (Throttled)")
-        client = Socrata(DOMAIN, None)
+        client = Socrata(config.DOMAIN, None)
 
     # Calculate time window
     lookback_date = (datetime.now() - timedelta(days=LOOKBACK_DAYS)).strftime('%Y-%m-%dT%H:%M:%S')
@@ -40,12 +37,16 @@ def fetch_311_data():
         "(complaint_type LIKE '%Rodent%' OR "
         "complaint_type LIKE '%Sanitation%' OR "
         "complaint_type LIKE '%Food Poisoning%' OR "
-        "complaint_type LIKE '%Dirty Conditions%')"
+        "complaint_type LIKE '%Dirty Conditions%' OR "
+        "complaint_type LIKE '%Pest%' OR "
+        "complaint_type LIKE '%Mold%' OR "
+        "complaint_type LIKE '%Sewage%' OR "
+        "complaint_type LIKE '%Air Quality%')"
     )
 
     try:
         # Limit set to 5000 to capture a full week of data if needed
-        results = client.get(DATASET_ID, where=where_query, limit=5000, order="created_date DESC")
+        results = client.get(config.DATASET_ID_311, where=where_query, limit=5000, order="created_date DESC")
         
         # Transformation: Standardize data for Layer 2 (Kafka)
         formatted_results = []

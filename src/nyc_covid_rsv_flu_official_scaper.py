@@ -42,28 +42,6 @@ class NYCRespiratoryDataScraper:
         """Filter by NYC borough."""
         return df[df['submetric'] == borough]
     
-    def format_for_kafka(self, df):
-        """Format data for Kafka ingestion."""
-        messages = []
-        
-        for _, row in df.iterrows():
-            message = {
-                'key': f"nyc_respiratory_{row['date']}_{row['metric']}_{row['submetric']}",
-                'value': {
-                    'source_type': 'official_health_data',
-                    'source_name': 'nyc_github_respiratory',
-                    'date': row['date'].isoformat() if isinstance(row['date'], pd.Timestamp) else row['date'],
-                    'metric': row['metric'],
-                    'submetric': row['submetric'],
-                    'value': float(row['value']),
-                    'display': row['display'],
-                    'scraped_at': datetime.now().isoformat()
-                }
-            }
-            messages.append(message)
-        
-        return messages
-    
     def save_to_postgres_format(self, df, filename='respiratory_data.csv'):
         """Save in format ready for PostgreSQL/TimescaleDB."""
         df['date'] = pd.to_datetime(df['date'])
@@ -96,11 +74,6 @@ def main():
     with open('respiratory_data_90days.json', 'w') as f:
         json.dump(recent_90.to_dict(orient='records'), f, indent=2, default=str)
     print("Saved to respiratory_data_90days.json")
-    
-    kafka_messages = scraper.format_for_kafka(recent_90.head(100))
-    with open('respiratory_kafka_sample.json', 'w') as f:
-        json.dump(kafka_messages, f, indent=2)
-    print("Saved to respiratory_kafka_sample.json")
     
     # Show latest values for key metrics
     latest = scraper.get_latest_values(df)

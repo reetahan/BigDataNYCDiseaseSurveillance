@@ -42,7 +42,6 @@ def scrape_press_releases(days_back=30):
         title = link.get_text(strip=True)
         href = link['href']
         
-        # Parse the date (format: "November 24, 2025")
         try:
             press_date = datetime.strptime(date_text, '%B %d, %Y')
         except ValueError:
@@ -71,7 +70,42 @@ def scrape_press_releases(days_back=30):
     print(f"Collected {len(press_releases)} press releases from last {days_back} days")
     return press_releases
 
-
+def fetch_article_text(url):
+    """Fetch the full text content of a press release."""
+    try:
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        content = None
+        
+        # Try common content containers
+        for selector in [
+            {'class': 'page-content'},
+            {'class': 'content'},
+            {'class': 'main-content'},
+            {'id': 'content'}
+        ]:
+            content = soup.find('div', selector)
+            if content:
+                break
+        
+        # If still not found, look for article or main tags
+        if not content:
+            content = soup.find('article') or soup.find('main')
+        
+        if content:
+            # Extract all paragraphs
+            paragraphs = content.find_all('p')
+            text = '\n\n'.join([p.get_text(strip=True) for p in paragraphs if p.get_text(strip=True)])
+            return text
+        
+        return None
+        
+    except Exception as e:
+        print(f"  Error fetching article: {e}")
+        return None
+    
 def filter_disease_related(press_releases):
     """Filter for disease-related press releases."""
     
@@ -96,31 +130,6 @@ def filter_disease_related(press_releases):
     return filtered
 
 
-def format_for_kafka(press_releases):
-    """Format press releases as Kafka messages."""
-    
-    messages = []
-    for pr in press_releases:
-        message = {
-            'key': pr['url'],
-            'value': {
-                'source_type': 'official_health_dept',
-                'source_name': 'nyc_doh',
-                'content_type': 'press_release',
-                'timestamp': pr['date'],
-                'title': pr['title'],
-                'url': pr['url'],
-                'full_text': None,
-                'metadata': {
-                    'scraped_at': pr['scraped_at']
-                }
-            }
-        }
-        messages.append(message)
-    
-    return messages
-
-
 def main():
     """Main function."""
     print("NYC Health Press Release Scraper\n")
@@ -132,6 +141,10 @@ def main():
         return
     
     disease_releases = filter_disease_related(press_releases)
+
+    for i, pr in enumerate(disease_releases, 1):
+        print(f"  [{i}/{len(disease_releases)}] {pr['title'][:50]}...")
+        pr['full_text'] = fetch_article_text(pr['url'])
     
     output_json = {
         'scraped_at': datetime.now().isoformat(),
@@ -144,13 +157,6 @@ def main():
     with open(filename_json, 'w', encoding='utf-8') as f:
         json.dump(output_json, f, indent=2, ensure_ascii=False)
     print(f"Saved to {filename_json}")
-    
-    kafka_messages = format_for_kafka(disease_releases)
-    filename_kafka = f"nyc_press_kafka_{datetime.now().strftime('%Y%m%d')}.json"
-    with open(filename_kafka, 'w', encoding='utf-8') as f:
-        json.dump(kafka_messages, f, indent=2, ensure_ascii=False)
-    print(f"Saved to {filename_kafka}")
-    
     print(f"\nTotal: {len(press_releases)} releases, {len(disease_releases)} disease-related")
     
     if disease_releases:

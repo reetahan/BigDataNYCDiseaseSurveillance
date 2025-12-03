@@ -215,3 +215,4 @@ __marimo__/
 # Ignore Mac/Windows system files
 .DS_Store
 Thumbs.db
+.jsonl

@@ -1,0 +1,4 @@
+atproto==0.0.63
+requests==2.32.5
+python-dotenv==1.2.1
+kafka-python==2.3.0

@@ -45,6 +45,12 @@ python run_bluesky_scraper.py --mode single --query "sick NYC" --limit 50
 
 **Documentation:** See [scrapers/bluesky/README.md](scrapers/bluesky/README.md)
 
+
+# Ticket 1.4: NYC Open Data & 311 Scraper
+
+## Overview
+This module ingests environmental health indicators (Rodent sightings, Sanitation issues, Food Poisoning complaints) from the NYC 311 Service Requests API via the Socrata Open Data standard.
+
 ## Project Structure
 
 ```
@@ -77,5 +83,5 @@ The system consists of 5 layers:
 - [x] Ticket 1.2: Bluesky Scraper (Steven) - **COMPLETE**
 - [ ] Ticket 1.1: Reddit Scraper (Adhyayan)
 - [ ] Ticket 1.3: Local News RSS Feeds (Devak)
-- [ ] Ticket 1.4: NYC Open Data & 311 API (Devak)
+- [x] Ticket 1.4: NYC Open Data & 311 API (Devak) **COMPLETE**
 - [ ] Ticket 1.5: Health Department PDF Scraping (Reetahan)

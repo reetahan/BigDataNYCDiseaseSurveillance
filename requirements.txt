@@ -1,3 +1,6 @@
+feedparser==6.0.10
+sodapy==2.2.0
+pandas==2.2.0
 atproto==0.0.63
 requests==2.32.5
 python-dotenv==1.2.1

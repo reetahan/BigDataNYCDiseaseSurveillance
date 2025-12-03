@@ -45,6 +45,11 @@ python run_bluesky_scraper.py --mode single --query "sick NYC" --limit 50
 
 **Documentation:** See [scrapers/bluesky/README.md](scrapers/bluesky/README.md)
 
+# Ticket 1.3: Local News RSS Scraper
+
+## Overview
+This module implements a scraper for Local NYC News RSS feeds (Gothamist, NY Post, NYT Region) to ingest health-related news articles into our pipeline.
+
 
 # Ticket 1.4: NYC Open Data & 311 Scraper
 
@@ -82,6 +87,6 @@ The system consists of 5 layers:
 ### Layer 1: Data Ingestion
 - [x] Ticket 1.2: Bluesky Scraper (Steven) - **COMPLETE**
 - [ ] Ticket 1.1: Reddit Scraper (Adhyayan)
-- [ ] Ticket 1.3: Local News RSS Feeds (Devak)
+- [x] Ticket 1.3: Local News RSS Feeds (Devak)
 - [x] Ticket 1.4: NYC Open Data & 311 API (Devak) **COMPLETE**
 - [ ] Ticket 1.5: Health Department PDF Scraping (Reetahan)

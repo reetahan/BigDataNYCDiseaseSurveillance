@@ -1,0 +1,31 @@
+{
+  "scraped_at": "2025-12-04T02:59:02.230863",
+  "total_releases": 4,
+  "disease_related": 3,
+  "releases": [
+    {
+      "source": "nyc_doh_press_release",
+      "title": "New York City Health Department Releases New HIV Surveillance Annual Report",
+      "date": "2025-12-01T00:00:00",
+      "url": "https://www.nyc.gov/site/doh/about/press/pr2025/nyc-health-department-releases-2024-hiv-surveillance-data.page",
+      "scraped_at": "2025-12-04T02:59:01.680403",
+      "full_text": null
+    },
+    {
+      "source": "nyc_doh_press_release",
+      "title": "New York City Reiterates Importance of Hepatitis B Birth Dose for All Newborns",
+      "date": "2025-11-24T00:00:00",
+      "url": "https://www.nyc.gov/site/doh/about/press/pr2025/nyc-reiterates-importance-of-hep-b-for-all-newborns.page",
+      "scraped_at": "2025-12-04T02:59:01.680403",
+      "full_text": null
+    },
+    {
+      "source": "nyc_doh_press_release",
+      "title": "New York City Health Department Launches Digital Tool to Help Veterinary Professionals Prevent Infections in Animals and People",
+      "date": "2025-11-18T00:00:00",
+      "url": "https://www.nyc.gov/site/doh/about/press/pr2025/nyc-health-launches-tool-to-help-vet-pros-prevent-infections.page",
+      "scraped_at": "2025-12-04T02:59:01.680403",
+      "full_text": null
+    }
+  ]
+}

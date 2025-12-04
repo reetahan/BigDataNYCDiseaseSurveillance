@@ -89,6 +89,7 @@ Before proceeding, ensure you have the following installed:
 * **Docker Compose** (if using a `docker-compose.yml` file)
 * **Git** (to clone the repository)
 * Basic understanding of containers and Kafka workflows
+* pip install kafka-python
 
 ---
 

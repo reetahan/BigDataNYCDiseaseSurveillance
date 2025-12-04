@@ -3,13 +3,13 @@ import os
 import time
 from sodapy import Socrata
 from datetime import datetime, timedelta
-import config
-
+from nyc_311 import config
 
 # LOOKBACK WINDOW:
-# Set to 7 days because NYC Open Data often has a 1-3 day lag 
+# Set to 7 days because NYC Open Data often has a 1-3 day lag
 # for non-emergency 311 data to appear in the public API.
-LOOKBACK_DAYS = 7 
+LOOKBACK_DAYS = 7
+
 
 def fetch_311_data():
     """
@@ -18,7 +18,7 @@ def fetch_311_data():
     """
     print(f"--- Starting 311 Scraper ---")
     print(f"Target: {config.DOMAIN}")
-    
+
     if config.APP_TOKEN:
         print("Auth Status: Authenticated (High Throughput)")
         client = Socrata(config.DOMAIN, config.APP_TOKEN)
@@ -47,7 +47,7 @@ def fetch_311_data():
     try:
         # Limit set to 5000 to capture a full week of data if needed
         results = client.get(config.DATASET_ID_311, where=where_query, limit=5000, order="created_date DESC")
-        
+
         # Transformation: Standardize data for Layer 2 (Kafka)
         formatted_results = []
         for r in results:
@@ -66,21 +66,24 @@ def fetch_311_data():
                 "scraped_at": datetime.now().isoformat()
             }
             formatted_results.append(record)
-            
+
         return formatted_results
 
     except Exception as e:
         print(f"CRITICAL ERROR: {e}")
         return []
 
+
 if __name__ == "__main__":
     data = fetch_311_data()
-    
+
     if data:
-        filename = f"311_data_{int(time.time())}.json"
+        output_dir = "data/nyc_311"
+        os.makedirs(output_dir, exist_ok=True)
+        filename = os.path.join(output_dir, f"311_data_{int(time.time())}.json")
         with open(filename, 'w') as f:
             json.dump(data, f, indent=4)
-            
+
         print(f"SUCCESS: Fetched {len(data)} records.")
         print(f"Data dump saved to: {filename}")
     else:

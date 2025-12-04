@@ -5,3 +5,7 @@ atproto==0.0.63
 requests==2.32.5
 python-dotenv==1.2.1
 kafka-python==2.3.0
+requests==2.31.0
+beautifulsoup4==4.12.2
+lxml==4.9.3
+

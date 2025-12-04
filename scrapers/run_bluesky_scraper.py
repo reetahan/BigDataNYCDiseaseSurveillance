@@ -16,8 +16,12 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'scrapers'))
 from bluesky.scraper import BlueskyScraper
 from bluesky.config import Config
 
+def ensure_data_folder():
+    """Create data folder if it doesn't exist"""
+    os.makedirs('data/bluesky', exist_ok=True)
 
 def main():
+    ensure_data_folder()
     parser = argparse.ArgumentParser(description='Bluesky Health Surveillance Scraper')
 
     parser.add_argument(
@@ -59,7 +63,7 @@ def main():
         '--output',
         type=str,
         default=Config.OUTPUT_FILE,
-        help='Output JSONL file path'
+        help='Output JSON file path'
     )
 
     parser.add_argument(

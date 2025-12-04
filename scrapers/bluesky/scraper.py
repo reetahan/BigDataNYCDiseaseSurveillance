@@ -5,11 +5,11 @@ Monitors Bluesky posts for health-related content in NYC
 
 import json
 import logging
+import os
 import time
 from datetime import datetime
 from typing import List, Dict, Optional
 from atproto import Client, models
-from kafka import KafkaProducer
 
 
 class BlueskyScraper:
@@ -50,6 +50,7 @@ class BlueskyScraper:
             enable_kafka: Whether to send data to Kafka
             output_file: Optional JSON file to save posts
         """
+        self.producer = None
         self.client = Client()
         self.enable_kafka = enable_kafka
         self.output_file = output_file

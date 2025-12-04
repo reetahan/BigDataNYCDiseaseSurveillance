@@ -3,10 +3,12 @@ Configuration settings for Bluesky scraper
 """
 
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
+# Load environment variables from project root
+project_root = Path(__file__).parent.parent.parent
+load_dotenv(project_root / '.env')
 
 
 class Config:
@@ -27,7 +29,7 @@ class Config:
     # Scraper settings
     SCRAPE_INTERVAL = int(os.getenv('SCRAPE_INTERVAL', '300'))  # seconds
     MAX_POSTS_PER_SEARCH = int(os.getenv('MAX_POSTS_PER_SEARCH', '100'))
-    OUTPUT_FILE = os.getenv('OUTPUT_FILE', 'data/bluesky_posts.jsonl')
+    OUTPUT_FILE = os.getenv('OUTPUT_FILE', 'data/bluesky_posts.json')
 
     # Health keywords (can be extended via environment)
     CUSTOM_HEALTH_KEYWORDS = os.getenv('CUSTOM_HEALTH_KEYWORDS', '').split(',')

@@ -59,7 +59,7 @@ def main():
         '--output',
         type=str,
         default=Config.OUTPUT_FILE,
-        help='Output JSONL file path'
+        help='Output JSON file path'
     )
 
     parser.add_argument(

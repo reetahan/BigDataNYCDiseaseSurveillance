@@ -158,12 +158,26 @@ class BlueskyScraper:
             except Exception as e:
                 self.logger.error(f"Failed to send to Kafka: {e}")
 
-    def _save_to_file(self, post_data: Dict):
-        """Append post data to JSON file"""
+    def _save_to_file(self, posts: List[Dict]):
+        """Save all posts to JSON file as an array"""
         if self.output_file:
             try:
-                with open(self.output_file, 'a') as f:
-                    f.write(json.dumps(post_data) + '\n')
+                # Read existing posts if file exists
+                existing_posts = []
+                if os.path.exists(self.output_file):
+                    try:
+                        with open(self.output_file, 'r') as f:
+                            existing_posts = json.load(f)
+                    except (json.JSONDecodeError, FileNotFoundError):
+                        existing_posts = []
+
+                # Combine existing and new posts
+                all_posts = existing_posts + posts
+
+                # Write all posts as JSON array
+                with open(self.output_file, 'w') as f:
+                    json.dump(all_posts, f, indent=2)
+
             except Exception as e:
                 self.logger.error(f"Failed to write to file: {e}")
 
@@ -211,13 +225,13 @@ class BlueskyScraper:
                             if self.enable_kafka:
                                 self._send_to_kafka(post_data)
 
-                            # Save to file if configured
-                            if self.output_file:
-                                self._save_to_file(post_data)
-
                             self.logger.info(f"Relevant post found: {post.uri}")
 
             self.logger.info(f"Collected {len(relevant_posts)} relevant posts")
+
+            # Save all posts to file after collection
+            if self.output_file and relevant_posts:
+                self._save_to_file(relevant_posts)
 
         except Exception as e:
             self.logger.error(f"Error searching posts: {e}")

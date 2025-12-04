@@ -27,7 +27,7 @@ class Config:
     # Scraper settings
     SCRAPE_INTERVAL = int(os.getenv('SCRAPE_INTERVAL', '300'))  # seconds
     MAX_POSTS_PER_SEARCH = int(os.getenv('MAX_POSTS_PER_SEARCH', '100'))
-    OUTPUT_FILE = os.getenv('OUTPUT_FILE', 'data/bluesky_posts.jsonl')
+    OUTPUT_FILE = os.getenv('OUTPUT_FILE', 'data/bluesky_posts.json')
 
     # Health keywords (can be extended via environment)
     CUSTOM_HEALTH_KEYWORDS = os.getenv('CUSTOM_HEALTH_KEYWORDS', '').split(',')

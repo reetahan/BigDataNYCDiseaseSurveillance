@@ -92,7 +92,7 @@ The system consists of 5 layers:
 
 ### Layer 1: Data Ingestion
 - [x] Ticket 1.2: Bluesky Scraper (Steven) - **COMPLETE**
-- [ ] Ticket 1.1: Reddit Scraper (Adhyayan)
+- [x] Ticket 1.1: Reddit Scraper (Adhyayan)
 - [x] Ticket 1.3: Local News RSS Feeds (Devak)
 - [x] Ticket 1.4: NYC Open Data & 311 API (Devak) **COMPLETE**
-- [ ] Ticket 1.5: Health Department PDF Scraping (Reetahan)
+- [x] Ticket 1.5: Health Department PDF Scraping (Reetahan)

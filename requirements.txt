@@ -5,7 +5,12 @@ atproto==0.0.63
 requests==2.32.5
 python-dotenv==1.2.1
 kafka-python==2.3.0
-requests==2.31.0
 beautifulsoup4==4.12.2
 lxml==4.9.3
+
+# Spark Streaming & Deduplication (Ticket 3.2)
+pyspark==4.0.1
+sentence-transformers==5.1.2
+scikit-learn==1.7.2
+numpy==2.3.5
 

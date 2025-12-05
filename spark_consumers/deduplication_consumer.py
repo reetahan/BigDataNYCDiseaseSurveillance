@@ -69,11 +69,13 @@ class DeduplicationConsumer:
         # Create output directory
         os.makedirs(self.output_dir, exist_ok=True)
 
-        # Initialize Spark Session
+        # Initialize Spark Session with Java 21+ compatibility
         self.spark = SparkSession.builder \
             .appName("NYC_Disease_Deduplication") \
             .config("spark.sql.streaming.schemaInference", "true") \
             .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0") \
+            .config("spark.driver.extraJavaOptions", "-Djava.security.manager=allow") \
+            .config("spark.executor.extraJavaOptions", "-Djava.security.manager=allow") \
             .getOrCreate()
 
         self.spark.sparkContext.setLogLevel("WARN")
@@ -266,18 +268,15 @@ class DeduplicationConsumer:
 
         return record
 
-    def process_batch(self, batch_df: DataFrame, batch_id: int):
+    def process_batch(self, records: List[Dict], batch_id: int):
         """
         Process a micro-batch of records
 
         Args:
-            batch_df: Spark DataFrame batch
+            records: List of record dictionaries
             batch_id: Batch ID
         """
-        logger.info(f"Processing batch {batch_id} with {batch_df.count()} records")
-
-        # Collect records as Python dicts for processing
-        records = [row.asDict() for row in batch_df.collect()]
+        logger.info(f"Processing batch {batch_id} with {len(records)} records")
 
         # Apply deduplication to each record
         processed_records = []
@@ -360,7 +359,7 @@ class DeduplicationConsumer:
             .format("kafka") \
             .option("kafka.bootstrap.servers", self.kafka_bootstrap_servers) \
             .option("subscribe", self.kafka_topics) \
-            .option("startingOffsets", "latest") \
+            .option("startingOffsets", "earliest") \
             .load()
 
         # Parse JSON values from Kafka
@@ -410,13 +409,8 @@ class DeduplicationConsumer:
                 logger.info(f"Batch {batch_id}: No valid records")
                 return
 
-            # Convert to DataFrame
-            from pyspark.sql import Row
-            rows = [Row(**record) for record in json_records]
-            parsed_df = self.spark.createDataFrame(rows)
-
-            # Process
-            self.process_batch(parsed_df, batch_id)
+            # Process directly as Python dicts (no DataFrame conversion needed)
+            self.process_batch(json_records, batch_id)
 
         except Exception as e:
             logger.error(f"Error in batch {batch_id}: {e}")

@@ -9,16 +9,17 @@ Main script - Runs the complete pipeline:
 from datetime import datetime
 import sys
 import subprocess
-import sys
+import argparse
+import os
 
 # Import the other scripts
 import kafka_publisher
 
 
-def run_complete_pipeline():
+def run_complete_pipeline(local_mode=False):
     """Run the complete Health → Kafka pipeline"""
     print("\n" + "#"*60)
-    print("# UNIFIED HEALTH DATA PIPELINE")
+    print(f"# UNIFIED HEALTH DATA PIPELINE {'(LOCAL MODE)' if local_mode else ''}")
     print("# ALL Scrapers → JSON → Kafka")
     print("#"*60)
     print(f"# Started at: {datetime.now()}")
@@ -26,26 +27,31 @@ def run_complete_pipeline():
 
 
     try:
+        # Setup environment for scrapers
+        env = os.environ.copy()
+        if local_mode:
+            env['LOCAL_MODE'] = '1'
+        
         # STEP 1: Scrape All Health Data
         print("\nSTEP 1: Scraping Reddit and saving to JSON...")
-        scrape_red = subprocess.run([sys.executable, "scrapers/redditscraper.py"], capture_output=False, text=True, check=True)
+        subprocess.run([sys.executable, "scrapers/redditscraper.py"], capture_output=False, text=True, check=True, env=env)
 
         print("\nSTEP 1: Scraping Bluesky and saving to JSON...")
-        scrape_blue = subprocess.run([sys.executable, "scrapers/run_bluesky_scraper.py"], capture_output=False, text=True, check=True)
+        subprocess.run([sys.executable, "scrapers/run_bluesky_scraper.py"], capture_output=False, text=True, check=True, env=env)
 
         print("\nSTEP 1: Scraping 311 and saving to JSON...")
-        scrape_311 = subprocess.run([sys.executable, "scrapers/scraper_311.py"], capture_output=False, text=True, check=True)
+        subprocess.run([sys.executable, "scrapers/scraper_311.py"], capture_output=False, text=True, check=True, env=env)
 
         print("\nSTEP 1: Scraping rss and saving to JSON...")
-        scrape_rss = subprocess.run([sys.executable, "scrapers/scraper_rss.py"], capture_output=False, text=True, check=True)
+        subprocess.run([sys.executable, "scrapers/scraper_rss.py"], capture_output=False, text=True, check=True, env=env)
 
         print("\nSTEP 1: Scraping nyc_health and saving to JSON...")
-        scrape_nyc_health = subprocess.run([sys.executable, "scrapers/nyc_health_press_release_scraper.py"], capture_output=False, text=True, check=True)
+        subprocess.run([sys.executable, "scrapers/nyc_health_press_release_scraper.py"], capture_output=False, text=True, check=True, env=env)
 
         print("\nSTEP 1: Scraping nyc_covid and saving to JSON...")
-        scrape_nyc_covid = subprocess.run([sys.executable, "scrapers/nyc_covid_rsv_flu_official_scraper.py"], capture_output=False, text=True, check=True)
+        subprocess.run([sys.executable, "scrapers/nyc_covid_rsv_flu_official_scraper.py"], capture_output=False, text=True, check=True, env=env)
 
-        # STEP 2: Publish ALL JSON files to Kafka (Reddit + other sources)
+        # STEP 2: Publish ALL JSON files to Kafka
         print("\nSTEP 2: Publishing ALL JSON files to Kafka...")
         kafka_results = kafka_publisher.publish_to_kafka()
 
@@ -58,7 +64,6 @@ def run_complete_pipeline():
         print(f"# ALL DATA SCRAPED IN data FOLDER")
         print(f"#")
         print(f"# KAFKA PUBLISHING RESULTS:")
-
         for topic, count in kafka_results['all_topics'].items():
             print(f"#   {topic}: {count} records")
 
@@ -86,5 +91,9 @@ def run_complete_pipeline():
         return False
 
 if __name__ == "__main__":
-    success = run_complete_pipeline()
+    parser = argparse.ArgumentParser(description='Run the health data pipeline')
+    parser.add_argument('--local', action='store_true', help='Run in local mode (no file saving or Kafka publishing)')
+    args = parser.parse_args()
+    
+    success = run_complete_pipeline(local_mode=args.local)
     sys.exit(0 if success else 1)

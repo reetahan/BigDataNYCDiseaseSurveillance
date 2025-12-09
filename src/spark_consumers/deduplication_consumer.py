@@ -11,6 +11,15 @@ Reads from Kafka → Deduplicates → Writes to output directory
 """
 
 import os
+import sys
+
+# Configure PySpark environment before any imports
+os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 pyspark-shell'
+os.environ['SPARK_LOCAL_IP'] = '127.0.0.1'
+if sys.version_info >= (3, 0):
+    os.environ['PYSPARK_PYTHON'] = sys.executable
+    os.environ['PYSPARK_DRIVER_PYTHON'] = sys.executable
+
 import json
 import hashlib
 from datetime import datetime
@@ -42,7 +51,7 @@ class DeduplicationConsumer:
     def __init__(
         self,
         kafka_bootstrap_servers: str = "localhost:9092",
-        kafka_topics: str = "reddit,bluesky,rss,nyc_311,nyc_press,nyc_covid",
+        kafka_topics: str = "reddit.health,bluesky.health,rss.health,nyc_311.health,nyc_press.health,nyc_covid.health",
         output_dir: str = "data/deduplicated",
         checkpoint_dir: str = "checkpoints/deduplication",
         similarity_threshold: float = 0.85,
@@ -69,13 +78,17 @@ class DeduplicationConsumer:
         # Create output directory
         os.makedirs(self.output_dir, exist_ok=True)
 
-        # Initialize Spark Session with Java 21+ compatibility
+        # Initialize Spark Session with Java 11+ compatibility
         self.spark = SparkSession.builder \
             .appName("NYC_Disease_Deduplication") \
+            .master("local[*]") \
+            .config("spark.driver.memory", "4g") \
+            .config("spark.executor.memory", "4g") \
             .config("spark.sql.streaming.schemaInference", "true") \
             .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0") \
-            .config("spark.driver.extraJavaOptions", "-Djava.security.manager=allow") \
-            .config("spark.executor.extraJavaOptions", "-Djava.security.manager=allow") \
+            .config("spark.driver.extraJavaOptions", "-Djava.security.manager.allow=true") \
+            .config("spark.executor.extraJavaOptions", "-Djava.security.manager.allow=true") \
+            .config("spark.sql.streaming.checkpointLocation", self.checkpoint_dir) \
             .getOrCreate()
 
         self.spark.sparkContext.setLogLevel("WARN")
@@ -426,7 +439,7 @@ def main():
 
     parser = argparse.ArgumentParser(description='Spark Streaming Deduplication Consumer')
     parser.add_argument('--kafka-servers', default='localhost:9092', help='Kafka bootstrap servers')
-    parser.add_argument('--topics', default='reddit,bluesky,rss,nyc_311,nyc_press,nyc_covid', help='Comma-separated Kafka topics')
+    parser.add_argument('--topics', default='reddit.health,bluesky.health,rss.health,nyc_311.health,nyc_press.health,nyc_covid.health', help='Comma-separated Kafka topics')
     parser.add_argument('--output-dir', default='data/deduplicated', help='Output directory')
     parser.add_argument('--checkpoint-dir', default='checkpoints/deduplication', help='Checkpoint directory')
     parser.add_argument('--similarity-threshold', type=float, default=0.85, help='Semantic similarity threshold (0-1)')

@@ -11,6 +11,15 @@ Reads from Kafka → Extracts locations → Writes enriched data
 """
 
 import os
+import sys
+
+# Configure PySpark environment before any imports
+os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 pyspark-shell'
+os.environ['SPARK_LOCAL_IP'] = '127.0.0.1'
+if sys.version_info >= (3, 0):
+    os.environ['PYSPARK_PYTHON'] = sys.executable
+    os.environ['PYSPARK_DRIVER_PYTHON'] = sys.executable
+
 import json
 import re
 from datetime import datetime
@@ -47,7 +56,7 @@ class LocationConsumer:
     def __init__(
         self,
         kafka_bootstrap_servers: str = "localhost:9092",
-        kafka_topics: str = "reddit,bluesky,rss,nyc_311,nyc_press,nyc_covid",
+        kafka_topics: str = "reddit.health,bluesky.health,rss.health,nyc_311.health,nyc_press.health,nyc_covid.health",
         output_dir: str = "data/locations",
         checkpoint_dir: str = "checkpoints/locations",
         spacy_model: str = "en_core_web_sm"
@@ -71,13 +80,17 @@ class LocationConsumer:
         # Create output directory
         os.makedirs(self.output_dir, exist_ok=True)
 
-        # Initialize Spark Session with Java 21+ compatibility
+        # Initialize Spark Session with Java 11+ compatibility
         self.spark = SparkSession.builder \
             .appName("NYC_Location_Extraction") \
+            .master("local[*]") \
+            .config("spark.driver.memory", "4g") \
+            .config("spark.executor.memory", "4g") \
             .config("spark.sql.streaming.schemaInference", "true") \
             .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0") \
-            .config("spark.driver.extraJavaOptions", "-Djava.security.manager=allow") \
-            .config("spark.executor.extraJavaOptions", "-Djava.security.manager=allow") \
+            .config("spark.driver.extraJavaOptions", "-Djava.security.manager.allow=true") \
+            .config("spark.executor.extraJavaOptions", "-Djava.security.manager.allow=true") \
+            .config("spark.sql.streaming.checkpointLocation", self.checkpoint_dir) \
             .getOrCreate()
 
         # Load spaCy model
@@ -383,7 +396,7 @@ def main():
     parser = argparse.ArgumentParser(description='Spark Streaming Location Extraction Consumer')
     parser.add_argument('--kafka-servers', default='localhost:9092',
                         help='Kafka bootstrap servers (default: localhost:9092)')
-    parser.add_argument('--topics', default='reddit,bluesky,rss,nyc_311,nyc_press,nyc_covid',
+    parser.add_argument('--topics', default='reddit.health,bluesky.health,rss.health,nyc_311.health,nyc_press.health,nyc_covid.health',
                         help='Comma-separated list of Kafka topics')
     parser.add_argument('--output-dir', default='data/locations',
                         help='Output directory for enriched data')

@@ -12,10 +12,10 @@ lxml==4.9.3
 pyspark==3.5.3
 sentence-transformers==5.1.2
 scikit-learn==1.7.2
-numpy==2.3.5
 
 # Location Extraction & Geospatial (Ticket 3.3)
 spacy==3.8.3
 geopy==2.4.1
 shapely==2.0.6
 
+numpy>=1.24.0,<2.0.0

@@ -65,9 +65,30 @@ def scrape_reddit(subreddits=['nyc', 'AskNYC', 'newyorkcity', 'Brooklyn', 'Queen
         days_back: How many days back to scrape
         max_posts: Maximum posts to check per subreddit
     """
+    # Check for local mode
+    local_mode = os.getenv('LOCAL_MODE') == '1'
+    
     print("\n" + "="*60)
-    print("STARTING REDDIT SCRAPER")
+    print(f"STARTING REDDIT SCRAPER {'(LOCAL MODE)' if local_mode else ''}")
     print("="*60)
+    
+    # In local mode, just return existing data without scraping
+    if local_mode:
+        ensure_data_folder()
+        all_posts = load_existing_data(POSTS_JSON)
+        all_comments = load_existing_data(COMMENTS_JSON)
+        
+        print(f"\nLocal mode: Loaded {len(all_posts)} posts and {len(all_comments)} comments from files")
+        print("="*60 + "\n")
+        
+        return {
+            'posts': all_posts,
+            'comments': all_comments,
+            'new_posts': 0,
+            'new_comments': 0,
+            'total_posts': len(all_posts),
+            'total_comments': len(all_comments)
+        }
 
     # Ensure data folder exists
     ensure_data_folder()

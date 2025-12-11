@@ -219,3 +219,4 @@ Thumbs.db
 
 # Data Directories
 data_processed/
+.crc

@@ -14,7 +14,7 @@ import os
 import sys
 
 # Configure PySpark environment before any imports
-os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 pyspark-shell'
+os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 --conf spark.driver.extraJavaOptions=-Djava.security.manager.allow=true --conf spark.executor.extraJavaOptions=-Djava.security.manager.allow=true pyspark-shell'
 os.environ['SPARK_LOCAL_IP'] = '127.0.0.1'
 if sys.version_info >= (3, 0):
     os.environ['PYSPARK_PYTHON'] = sys.executable
@@ -50,6 +50,8 @@ class DeduplicationConsumer:
 
     def __init__(
         self,
+        input_source: str = "kafka",
+        input_path: str = None,
         kafka_bootstrap_servers: str = "localhost:9092",
         kafka_topics: str = "reddit.health,bluesky.health,rss.health,nyc_311.health,nyc_press.health,nyc_covid.health",
         output_dir: str = "data/deduplicated",
@@ -61,6 +63,8 @@ class DeduplicationConsumer:
         Initialize the deduplication consumer
 
         Args:
+            input_source: "kafka" or "file" - where to read data from
+            input_path: Path to input files (for file mode, e.g., "data/relevance/relevant/")
             kafka_bootstrap_servers: Kafka broker addresses
             kafka_topics: Comma-separated list of Kafka topics to consume
             output_dir: Directory to write deduplicated data
@@ -68,6 +72,8 @@ class DeduplicationConsumer:
             similarity_threshold: Cosine similarity threshold for semantic deduplication (0-1)
             fuzzy_threshold: TF-IDF similarity threshold for fuzzy matching (0-1)
         """
+        self.input_source = input_source
+        self.input_path = input_path
         self.kafka_bootstrap_servers = kafka_bootstrap_servers
         self.kafka_topics = kafka_topics
         self.output_dir = output_dir
@@ -353,19 +359,66 @@ class DeduplicationConsumer:
                 json.dump(duplicate_records, f, indent=2)
             logger.info(f"Wrote {len(duplicate_records)} duplicate records to {dup_file}")
 
+    def read_from_files(self):
+        """
+        Read JSON records from file system (batch mode)
+        """
+        import glob
+
+        logger.info(f"Reading files from: {self.input_path}")
+
+        # Find all JSON files in the input path
+        if os.path.isdir(self.input_path):
+            file_pattern = os.path.join(self.input_path, "*.json")
+        else:
+            file_pattern = self.input_path
+
+        json_files = glob.glob(file_pattern)
+        logger.info(f"Found {len(json_files)} JSON files")
+
+        all_records = []
+        for file_path in json_files:
+            try:
+                with open(file_path, 'r') as f:
+                    data = json.load(f)
+                    # Handle both single objects and arrays
+                    if isinstance(data, list):
+                        all_records.extend(data)
+                    else:
+                        all_records.append(data)
+            except Exception as e:
+                logger.warning(f"Failed to read {file_path}: {e}")
+
+        logger.info(f"Loaded {len(all_records)} total records")
+        return all_records
+
     def start(self):
         """
-        Start the Spark Streaming consumer
+        Start the deduplication consumer (streaming or batch mode)
         """
         logger.info("="*60)
         logger.info("Starting NYC Disease Deduplication Consumer")
-        logger.info(f"Kafka Brokers: {self.kafka_bootstrap_servers}")
-        logger.info(f"Topics: {self.kafka_topics}")
+        logger.info(f"Input Source: {self.input_source}")
+        if self.input_source == "kafka":
+            logger.info(f"Kafka Brokers: {self.kafka_bootstrap_servers}")
+            logger.info(f"Topics: {self.kafka_topics}")
+        else:
+            logger.info(f"Input Path: {self.input_path}")
         logger.info(f"Output Dir: {self.output_dir}")
         logger.info(f"Similarity Threshold: {self.similarity_threshold}")
         logger.info(f"Fuzzy Threshold: {self.fuzzy_threshold}")
         logger.info("="*60)
 
+        if self.input_source == "file":
+            # Batch processing mode
+            records = self.read_from_files()
+            if records:
+                self.process_batch(records, batch_id=0)
+            logger.info("File processing completed")
+            self.spark.stop()
+            return
+
+        # Streaming mode (Kafka)
         # Read from Kafka
         df = self.spark \
             .readStream \
@@ -438,6 +491,8 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description='Spark Streaming Deduplication Consumer')
+    parser.add_argument('--input-source', default='kafka', choices=['kafka', 'file'], help='Input source: kafka or file')
+    parser.add_argument('--input-path', default=None, help='Path to input files (for file mode)')
     parser.add_argument('--kafka-servers', default='localhost:9092', help='Kafka bootstrap servers')
     parser.add_argument('--topics', default='reddit.health,bluesky.health,rss.health,nyc_311.health,nyc_press.health,nyc_covid.health', help='Comma-separated Kafka topics')
     parser.add_argument('--output-dir', default='data/deduplicated', help='Output directory')
@@ -448,6 +503,8 @@ def main():
     args = parser.parse_args()
 
     consumer = DeduplicationConsumer(
+        input_source=args.input_source,
+        input_path=args.input_path,
         kafka_bootstrap_servers=args.kafka_servers,
         kafka_topics=args.topics,
         output_dir=args.output_dir,

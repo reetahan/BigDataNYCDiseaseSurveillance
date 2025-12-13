@@ -220,3 +220,20 @@ Thumbs.db
 # Data Directories
 data_processed/
 .crc
+
+# Spark Checkpoints
+checkpoints/
+src/checkpoints/
+**/checkpoints/
+
+# Kafka tracking files
+.kafka_published_files.json
+data/.kafka_published_files.json
+
+# ChromaDB
+data/chromadb/
+src/data/chromadb/
+chroma.sqlite3
+
+# TimescaleDB volume (if using local mount)
+timescale_data/

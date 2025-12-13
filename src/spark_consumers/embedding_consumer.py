@@ -302,11 +302,27 @@ class EmbeddingConsumer:
         for file_path in json_files:
             try:
                 with open(file_path, 'r') as f:
-                    data = json.load(f)
-                    if isinstance(data, list):
-                        all_records.extend(data)
-                    else:
-                        all_records.append(data)
+                    content = f.read().strip()
+                    if not content:
+                        continue
+                    
+                    # Try to parse as regular JSON first
+                    try:
+                        data = json.loads(content)
+                        if isinstance(data, list):
+                            all_records.extend(data)
+                        else:
+                            all_records.append(data)
+                    except json.JSONDecodeError:
+                        # If that fails, try JSONL (newline-delimited JSON)
+                        lines = content.split('\n')
+                        for line in lines:
+                            line = line.strip()
+                            if line:
+                                try:
+                                    all_records.append(json.loads(line))
+                                except json.JSONDecodeError:
+                                    pass
             except Exception as e:
                 logger.warning(f"Failed to read {file_path}: {e}")
 

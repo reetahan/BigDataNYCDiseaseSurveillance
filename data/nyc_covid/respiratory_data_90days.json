@@ -1,19 +1,5 @@
 [
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "Respiratory illness visits",
-    "submetric": "Overall",
-    "value": 6.58,
-    "display": "Percent"
-  },
-  {
-    "date": "2025-09-13 00:00:00",
-    "metric": "Respiratory illness visits",
-    "submetric": "Overall",
-    "value": 6.99,
-    "display": "Percent"
-  },
-  {
     "date": "2025-09-20 00:00:00",
     "metric": "Respiratory illness visits",
     "submetric": "Overall",
@@ -73,28 +59,28 @@
     "date": "2025-11-15 00:00:00",
     "metric": "Respiratory illness visits",
     "submetric": "Overall",
-    "value": 9.6,
+    "value": 9.61,
     "display": "Percent"
   },
   {
     "date": "2025-11-22 00:00:00",
     "metric": "Respiratory illness visits",
     "submetric": "Overall",
-    "value": 11.36,
+    "value": 11.43,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "Respiratory illness hospitalizations",
+    "date": "2025-11-29 00:00:00",
+    "metric": "Respiratory illness visits",
     "submetric": "Overall",
-    "value": 6.24,
+    "value": 14.9,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "Respiratory illness hospitalizations",
+    "date": "2025-12-06 00:00:00",
+    "metric": "Respiratory illness visits",
     "submetric": "Overall",
-    "value": 7.12,
+    "value": 16.29,
     "display": "Percent"
   },
   {
@@ -157,28 +143,28 @@
     "date": "2025-11-15 00:00:00",
     "metric": "Respiratory illness hospitalizations",
     "submetric": "Overall",
-    "value": 8.49,
+    "value": 8.5,
     "display": "Percent"
   },
   {
     "date": "2025-11-22 00:00:00",
     "metric": "Respiratory illness hospitalizations",
     "submetric": "Overall",
-    "value": 8.57,
+    "value": 8.67,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "COVID-19 visits",
+    "date": "2025-11-29 00:00:00",
+    "metric": "Respiratory illness hospitalizations",
     "submetric": "Overall",
-    "value": 0.63,
+    "value": 10.1,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "COVID-19 visits",
+    "date": "2025-12-06 00:00:00",
+    "metric": "Respiratory illness hospitalizations",
     "submetric": "Overall",
-    "value": 0.59,
+    "value": 10.78,
     "display": "Percent"
   },
   {
@@ -252,17 +238,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "COVID-19 visits by age group",
-    "submetric": "0-4",
-    "value": 1.98,
+    "date": "2025-11-29 00:00:00",
+    "metric": "COVID-19 visits",
+    "submetric": "Overall",
+    "value": 0.18,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "COVID-19 visits by age group",
-    "submetric": "0-4",
-    "value": 2.05,
+    "date": "2025-12-06 00:00:00",
+    "metric": "COVID-19 visits",
+    "submetric": "Overall",
+    "value": 0.18,
     "display": "Percent"
   },
   {
@@ -336,17 +322,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "COVID-19 visits by age group",
-    "submetric": "5-17",
-    "value": 0.43,
+    "submetric": "0-4",
+    "value": 0.23,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "COVID-19 visits by age group",
-    "submetric": "5-17",
-    "value": 0.47,
+    "submetric": "0-4",
+    "value": 0.27,
     "display": "Percent"
   },
   {
@@ -420,17 +406,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "COVID-19 visits by age group",
-    "submetric": "18-64",
-    "value": 0.45,
+    "submetric": "5-17",
+    "value": 0.1,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "COVID-19 visits by age group",
-    "submetric": "18-64",
-    "value": 0.42,
+    "submetric": "5-17",
+    "value": 0.07,
     "display": "Percent"
   },
   {
@@ -504,17 +490,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "COVID-19 visits by age group",
-    "submetric": "65+",
-    "value": 0.87,
+    "submetric": "18-64",
+    "value": 0.14,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "COVID-19 visits by age group",
-    "submetric": "65+",
-    "value": 0.75,
+    "submetric": "18-64",
+    "value": 0.15,
     "display": "Percent"
   },
   {
@@ -584,21 +570,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "COVID-19 visits by age group",
     "submetric": "65+",
-    "value": 0.22,
+    "value": 0.23,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "COVID-19 visits by borough",
-    "submetric": "Bronx",
-    "value": 0.56,
+    "date": "2025-11-29 00:00:00",
+    "metric": "COVID-19 visits by age group",
+    "submetric": "65+",
+    "value": 0.34,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "COVID-19 visits by borough",
-    "submetric": "Bronx",
-    "value": 0.48,
+    "date": "2025-12-06 00:00:00",
+    "metric": "COVID-19 visits by age group",
+    "submetric": "65+",
+    "value": 0.29,
     "display": "Percent"
   },
   {
@@ -672,17 +658,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "COVID-19 visits by borough",
-    "submetric": "Brooklyn",
-    "value": 0.61,
+    "submetric": "Bronx",
+    "value": 0.14,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "COVID-19 visits by borough",
-    "submetric": "Brooklyn",
-    "value": 0.6,
+    "submetric": "Bronx",
+    "value": 0.17,
     "display": "Percent"
   },
   {
@@ -752,21 +738,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "COVID-19 visits by borough",
     "submetric": "Brooklyn",
-    "value": 0.17,
+    "value": 0.18,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "COVID-19 visits by borough",
-    "submetric": "Manhattan",
-    "value": 0.64,
+    "submetric": "Brooklyn",
+    "value": 0.19,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "COVID-19 visits by borough",
-    "submetric": "Manhattan",
-    "value": 0.55,
+    "submetric": "Brooklyn",
+    "value": 0.15,
     "display": "Percent"
   },
   {
@@ -836,21 +822,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "COVID-19 visits by borough",
     "submetric": "Manhattan",
-    "value": 0.11,
+    "value": 0.12,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "COVID-19 visits by borough",
-    "submetric": "Queens",
-    "value": 0.8,
+    "submetric": "Manhattan",
+    "value": 0.17,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "COVID-19 visits by borough",
-    "submetric": "Queens",
-    "value": 0.77,
+    "submetric": "Manhattan",
+    "value": 0.07,
     "display": "Percent"
   },
   {
@@ -920,21 +906,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "COVID-19 visits by borough",
     "submetric": "Queens",
-    "value": 0.12,
+    "value": 0.13,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "COVID-19 visits by borough",
-    "submetric": "Staten Island",
-    "value": 0.42,
+    "submetric": "Queens",
+    "value": 0.17,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "COVID-19 visits by borough",
-    "submetric": "Staten Island",
-    "value": 0.44,
+    "submetric": "Queens",
+    "value": 0.26,
     "display": "Percent"
   },
   {
@@ -1008,17 +994,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "COVID-19 hospitalizations",
-    "submetric": "Overall",
-    "value": 0.43,
+    "date": "2025-11-29 00:00:00",
+    "metric": "COVID-19 visits by borough",
+    "submetric": "Staten Island",
+    "value": 0.38,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "COVID-19 hospitalizations",
-    "submetric": "Overall",
-    "value": 0.46,
+    "date": "2025-12-06 00:00:00",
+    "metric": "COVID-19 visits by borough",
+    "submetric": "Staten Island",
+    "value": 0.3,
     "display": "Percent"
   },
   {
@@ -1088,21 +1074,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "COVID-19 hospitalizations",
     "submetric": "Overall",
-    "value": 0.15,
+    "value": 0.17,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "COVID-19 hospitalizations by age group",
-    "submetric": "0-4",
-    "value": 1.63,
+    "date": "2025-11-29 00:00:00",
+    "metric": "COVID-19 hospitalizations",
+    "submetric": "Overall",
+    "value": 0.34,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "COVID-19 hospitalizations by age group",
-    "submetric": "0-4",
-    "value": 0.45,
+    "date": "2025-12-06 00:00:00",
+    "metric": "COVID-19 hospitalizations",
+    "submetric": "Overall",
+    "value": 0.21,
     "display": "Percent"
   },
   {
@@ -1176,17 +1162,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "COVID-19 hospitalizations by age group",
-    "submetric": "5-17",
-    "value": 0.56,
+    "submetric": "0-4",
+    "value": 0.0,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "COVID-19 hospitalizations by age group",
-    "submetric": "5-17",
-    "value": 0.31,
+    "submetric": "0-4",
+    "value": 0.23,
     "display": "Percent"
   },
   {
@@ -1260,17 +1246,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "COVID-19 hospitalizations by age group",
-    "submetric": "18-64",
+    "submetric": "5-17",
     "value": 0.3,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "COVID-19 hospitalizations by age group",
-    "submetric": "18-64",
-    "value": 0.21,
+    "submetric": "5-17",
+    "value": 0.0,
     "display": "Percent"
   },
   {
@@ -1340,21 +1326,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "COVID-19 hospitalizations by age group",
     "submetric": "18-64",
-    "value": 0.04,
+    "value": 0.06,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "COVID-19 hospitalizations by age group",
-    "submetric": "65+",
-    "value": 0.52,
+    "submetric": "18-64",
+    "value": 0.15,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "COVID-19 hospitalizations by age group",
-    "submetric": "65+",
-    "value": 0.78,
+    "submetric": "18-64",
+    "value": 0.13,
     "display": "Percent"
   },
   {
@@ -1417,28 +1403,28 @@
     "date": "2025-11-15 00:00:00",
     "metric": "COVID-19 hospitalizations by age group",
     "submetric": "65+",
-    "value": 0.36,
+    "value": 0.37,
     "display": "Percent"
   },
   {
     "date": "2025-11-22 00:00:00",
     "metric": "COVID-19 hospitalizations by age group",
     "submetric": "65+",
-    "value": 0.3,
+    "value": 0.34,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "COVID-19 hospitalizations by borough",
-    "submetric": "Bronx",
-    "value": 0.14,
+    "date": "2025-11-29 00:00:00",
+    "metric": "COVID-19 hospitalizations by age group",
+    "submetric": "65+",
+    "value": 0.61,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "COVID-19 hospitalizations by borough",
-    "submetric": "Bronx",
-    "value": 0.37,
+    "date": "2025-12-06 00:00:00",
+    "metric": "COVID-19 hospitalizations by age group",
+    "submetric": "65+",
+    "value": 0.33,
     "display": "Percent"
   },
   {
@@ -1508,21 +1494,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "COVID-19 hospitalizations by borough",
     "submetric": "Bronx",
-    "value": 0.09,
+    "value": 0.11,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "COVID-19 hospitalizations by borough",
-    "submetric": "Brooklyn",
-    "value": 0.54,
+    "submetric": "Bronx",
+    "value": 0.22,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "COVID-19 hospitalizations by borough",
-    "submetric": "Brooklyn",
-    "value": 0.44,
+    "submetric": "Bronx",
+    "value": 0.16,
     "display": "Percent"
   },
   {
@@ -1592,21 +1578,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "COVID-19 hospitalizations by borough",
     "submetric": "Brooklyn",
-    "value": 0.23,
+    "value": 0.26,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "COVID-19 hospitalizations by borough",
-    "submetric": "Manhattan",
-    "value": 0.5,
+    "submetric": "Brooklyn",
+    "value": 0.33,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "COVID-19 hospitalizations by borough",
-    "submetric": "Manhattan",
-    "value": 0.27,
+    "submetric": "Brooklyn",
+    "value": 0.24,
     "display": "Percent"
   },
   {
@@ -1676,21 +1662,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "COVID-19 hospitalizations by borough",
     "submetric": "Manhattan",
-    "value": 0.13,
+    "value": 0.21,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "COVID-19 hospitalizations by borough",
-    "submetric": "Queens",
-    "value": 0.58,
+    "submetric": "Manhattan",
+    "value": 0.22,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "COVID-19 hospitalizations by borough",
-    "submetric": "Queens",
-    "value": 0.78,
+    "submetric": "Manhattan",
+    "value": 0.19,
     "display": "Percent"
   },
   {
@@ -1764,17 +1750,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "COVID-19 hospitalizations by borough",
-    "submetric": "Staten Island",
-    "value": 0.0,
+    "submetric": "Queens",
+    "value": 0.45,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "COVID-19 hospitalizations by borough",
-    "submetric": "Staten Island",
-    "value": 0.15,
+    "submetric": "Queens",
+    "value": 0.21,
     "display": "Percent"
   },
   {
@@ -1844,21 +1830,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "COVID-19 hospitalizations by borough",
     "submetric": "Staten Island",
-    "value": 0.27,
+    "value": 0.28,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "Influenza visits",
-    "submetric": "Overall",
-    "value": 0.06,
+    "date": "2025-11-29 00:00:00",
+    "metric": "COVID-19 hospitalizations by borough",
+    "submetric": "Staten Island",
+    "value": 0.6,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "Influenza visits",
-    "submetric": "Overall",
-    "value": 0.05,
+    "date": "2025-12-06 00:00:00",
+    "metric": "COVID-19 hospitalizations by borough",
+    "submetric": "Staten Island",
+    "value": 0.25,
     "display": "Percent"
   },
   {
@@ -1928,21 +1914,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "Influenza visits",
     "submetric": "Overall",
-    "value": 1.55,
+    "value": 1.57,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "Influenza visits by age group",
-    "submetric": "0-4",
-    "value": 0.09,
+    "date": "2025-11-29 00:00:00",
+    "metric": "Influenza visits",
+    "submetric": "Overall",
+    "value": 3.39,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "Influenza visits by age group",
-    "submetric": "0-4",
-    "value": 0.14,
+    "date": "2025-12-06 00:00:00",
+    "metric": "Influenza visits",
+    "submetric": "Overall",
+    "value": 4.13,
     "display": "Percent"
   },
   {
@@ -2012,21 +1998,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "Influenza visits by age group",
     "submetric": "0-4",
-    "value": 3.3,
+    "value": 3.44,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "Influenza visits by age group",
-    "submetric": "5-17",
-    "value": 0.08,
+    "submetric": "0-4",
+    "value": 8.35,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Influenza visits by age group",
-    "submetric": "5-17",
-    "value": 0.05,
+    "submetric": "0-4",
+    "value": 8.82,
     "display": "Percent"
   },
   {
@@ -2096,21 +2082,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "Influenza visits by age group",
     "submetric": "5-17",
-    "value": 5.5,
+    "value": 5.54,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "Influenza visits by age group",
-    "submetric": "18-64",
-    "value": 0.05,
+    "submetric": "5-17",
+    "value": 11.1,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Influenza visits by age group",
-    "submetric": "18-64",
-    "value": 0.05,
+    "submetric": "5-17",
+    "value": 10.51,
     "display": "Percent"
   },
   {
@@ -2173,7 +2159,7 @@
     "date": "2025-11-15 00:00:00",
     "metric": "Influenza visits by age group",
     "submetric": "18-64",
-    "value": 0.37,
+    "value": 0.38,
     "display": "Percent"
   },
   {
@@ -2184,17 +2170,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "Influenza visits by age group",
-    "submetric": "65+",
-    "value": 0.09,
+    "submetric": "18-64",
+    "value": 1.91,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Influenza visits by age group",
-    "submetric": "65+",
-    "value": 0.01,
+    "submetric": "18-64",
+    "value": 2.85,
     "display": "Percent"
   },
   {
@@ -2268,17 +2254,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "Influenza visits by borough",
-    "submetric": "Bronx",
-    "value": 0.07,
+    "date": "2025-11-29 00:00:00",
+    "metric": "Influenza visits by age group",
+    "submetric": "65+",
+    "value": 1.39,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "Influenza visits by borough",
-    "submetric": "Bronx",
-    "value": 0.06,
+    "date": "2025-12-06 00:00:00",
+    "metric": "Influenza visits by age group",
+    "submetric": "65+",
+    "value": 2.21,
     "display": "Percent"
   },
   {
@@ -2352,17 +2338,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "Influenza visits by borough",
-    "submetric": "Brooklyn",
-    "value": 0.06,
+    "submetric": "Bronx",
+    "value": 3.48,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Influenza visits by borough",
-    "submetric": "Brooklyn",
-    "value": 0.04,
+    "submetric": "Bronx",
+    "value": 4.56,
     "display": "Percent"
   },
   {
@@ -2432,21 +2418,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "Influenza visits by borough",
     "submetric": "Brooklyn",
-    "value": 1.85,
+    "value": 1.9,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "Influenza visits by borough",
-    "submetric": "Manhattan",
-    "value": 0.04,
+    "submetric": "Brooklyn",
+    "value": 3.28,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Influenza visits by borough",
-    "submetric": "Manhattan",
-    "value": 0.04,
+    "submetric": "Brooklyn",
+    "value": 3.87,
     "display": "Percent"
   },
   {
@@ -2516,21 +2502,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "Influenza visits by borough",
     "submetric": "Manhattan",
-    "value": 1.02,
+    "value": 1.03,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "Influenza visits by borough",
-    "submetric": "Queens",
-    "value": 0.08,
+    "submetric": "Manhattan",
+    "value": 2.13,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Influenza visits by borough",
-    "submetric": "Queens",
-    "value": 0.05,
+    "submetric": "Manhattan",
+    "value": 2.75,
     "display": "Percent"
   },
   {
@@ -2600,21 +2586,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "Influenza visits by borough",
     "submetric": "Queens",
-    "value": 1.97,
+    "value": 1.99,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "Influenza visits by borough",
-    "submetric": "Staten Island",
-    "value": 0.08,
+    "submetric": "Queens",
+    "value": 4.72,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Influenza visits by borough",
-    "submetric": "Staten Island",
-    "value": 0.08,
+    "submetric": "Queens",
+    "value": 5.37,
     "display": "Percent"
   },
   {
@@ -2677,7 +2663,7 @@
     "date": "2025-11-15 00:00:00",
     "metric": "Influenza visits by borough",
     "submetric": "Staten Island",
-    "value": 0.42,
+    "value": 0.44,
     "display": "Percent"
   },
   {
@@ -2688,17 +2674,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "Influenza hospitalizations",
-    "submetric": "Overall",
-    "value": 0.04,
+    "date": "2025-11-29 00:00:00",
+    "metric": "Influenza visits by borough",
+    "submetric": "Staten Island",
+    "value": 2.12,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "Influenza hospitalizations",
-    "submetric": "Overall",
-    "value": 0.02,
+    "date": "2025-12-06 00:00:00",
+    "metric": "Influenza visits by borough",
+    "submetric": "Staten Island",
+    "value": 2.94,
     "display": "Percent"
   },
   {
@@ -2772,17 +2758,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "Influenza hospitalizations by age group",
-    "submetric": "0-4",
-    "value": 0.0,
+    "date": "2025-11-29 00:00:00",
+    "metric": "Influenza hospitalizations",
+    "submetric": "Overall",
+    "value": 1.32,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "Influenza hospitalizations by age group",
-    "submetric": "0-4",
-    "value": 0.0,
+    "date": "2025-12-06 00:00:00",
+    "metric": "Influenza hospitalizations",
+    "submetric": "Overall",
+    "value": 1.9,
     "display": "Percent"
   },
   {
@@ -2852,21 +2838,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "Influenza hospitalizations by age group",
     "submetric": "0-4",
-    "value": 0.91,
+    "value": 0.95,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "Influenza hospitalizations by age group",
-    "submetric": "5-17",
-    "value": 0.0,
+    "submetric": "0-4",
+    "value": 3.61,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Influenza hospitalizations by age group",
-    "submetric": "5-17",
-    "value": 0.0,
+    "submetric": "0-4",
+    "value": 3.91,
     "display": "Percent"
   },
   {
@@ -2936,21 +2922,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "Influenza hospitalizations by age group",
     "submetric": "5-17",
-    "value": 2.96,
+    "value": 2.87,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "Influenza hospitalizations by age group",
-    "submetric": "18-64",
-    "value": 0.02,
+    "submetric": "5-17",
+    "value": 4.15,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Influenza hospitalizations by age group",
-    "submetric": "18-64",
-    "value": 0.04,
+    "submetric": "5-17",
+    "value": 5.12,
     "display": "Percent"
   },
   {
@@ -3020,21 +3006,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "Influenza hospitalizations by age group",
     "submetric": "18-64",
-    "value": 0.53,
+    "value": 0.55,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "Influenza hospitalizations by age group",
-    "submetric": "65+",
-    "value": 0.07,
+    "submetric": "18-64",
+    "value": 0.79,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Influenza hospitalizations by age group",
-    "submetric": "65+",
-    "value": 0.0,
+    "submetric": "18-64",
+    "value": 1.27,
     "display": "Percent"
   },
   {
@@ -3097,28 +3083,28 @@
     "date": "2025-11-15 00:00:00",
     "metric": "Influenza hospitalizations by age group",
     "submetric": "65+",
-    "value": 0.32,
+    "value": 0.29,
     "display": "Percent"
   },
   {
     "date": "2025-11-22 00:00:00",
     "metric": "Influenza hospitalizations by age group",
     "submetric": "65+",
-    "value": 0.63,
+    "value": 0.62,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "Influenza hospitalizations by borough",
-    "submetric": "Bronx",
-    "value": 0.0,
+    "date": "2025-11-29 00:00:00",
+    "metric": "Influenza hospitalizations by age group",
+    "submetric": "65+",
+    "value": 1.59,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "Influenza hospitalizations by borough",
-    "submetric": "Bronx",
-    "value": 0.05,
+    "date": "2025-12-06 00:00:00",
+    "metric": "Influenza hospitalizations by age group",
+    "submetric": "65+",
+    "value": 2.24,
     "display": "Percent"
   },
   {
@@ -3181,28 +3167,28 @@
     "date": "2025-11-15 00:00:00",
     "metric": "Influenza hospitalizations by borough",
     "submetric": "Bronx",
-    "value": 0.2,
+    "value": 0.15,
     "display": "Percent"
   },
   {
     "date": "2025-11-22 00:00:00",
     "metric": "Influenza hospitalizations by borough",
     "submetric": "Bronx",
-    "value": 0.31,
+    "value": 0.26,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "Influenza hospitalizations by borough",
-    "submetric": "Brooklyn",
-    "value": 0.03,
+    "submetric": "Bronx",
+    "value": 1.35,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Influenza hospitalizations by borough",
-    "submetric": "Brooklyn",
-    "value": 0.0,
+    "submetric": "Bronx",
+    "value": 2.15,
     "display": "Percent"
   },
   {
@@ -3272,21 +3258,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "Influenza hospitalizations by borough",
     "submetric": "Brooklyn",
-    "value": 0.64,
+    "value": 0.62,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "Influenza hospitalizations by borough",
-    "submetric": "Manhattan",
-    "value": 0.0,
+    "submetric": "Brooklyn",
+    "value": 0.96,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Influenza hospitalizations by borough",
-    "submetric": "Manhattan",
-    "value": 0.07,
+    "submetric": "Brooklyn",
+    "value": 1.51,
     "display": "Percent"
   },
   {
@@ -3360,17 +3346,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "Influenza hospitalizations by borough",
-    "submetric": "Queens",
-    "value": 0.12,
+    "submetric": "Manhattan",
+    "value": 1.11,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Influenza hospitalizations by borough",
-    "submetric": "Queens",
-    "value": 0.0,
+    "submetric": "Manhattan",
+    "value": 0.83,
     "display": "Percent"
   },
   {
@@ -3440,21 +3426,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "Influenza hospitalizations by borough",
     "submetric": "Queens",
-    "value": 1.24,
+    "value": 1.26,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "Influenza hospitalizations by borough",
-    "submetric": "Staten Island",
-    "value": 0.0,
+    "submetric": "Queens",
+    "value": 2.14,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Influenza hospitalizations by borough",
-    "submetric": "Staten Island",
-    "value": 0.0,
+    "submetric": "Queens",
+    "value": 3.0,
     "display": "Percent"
   },
   {
@@ -3524,21 +3510,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "Influenza hospitalizations by borough",
     "submetric": "Staten Island",
-    "value": 0.95,
+    "value": 0.97,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "RSV visits",
-    "submetric": "Overall",
-    "value": 0.01,
+    "date": "2025-11-29 00:00:00",
+    "metric": "Influenza hospitalizations by borough",
+    "submetric": "Staten Island",
+    "value": 1.35,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "RSV visits",
-    "submetric": "Overall",
-    "value": 0.02,
+    "date": "2025-12-06 00:00:00",
+    "metric": "Influenza hospitalizations by borough",
+    "submetric": "Staten Island",
+    "value": 2.11,
     "display": "Percent"
   },
   {
@@ -3612,17 +3598,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "RSV visits by age group",
-    "submetric": "0-4",
-    "value": 0.07,
+    "date": "2025-11-29 00:00:00",
+    "metric": "RSV visits",
+    "submetric": "Overall",
+    "value": 0.2,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "RSV visits by age group",
-    "submetric": "0-4",
-    "value": 0.34,
+    "date": "2025-12-06 00:00:00",
+    "metric": "RSV visits",
+    "submetric": "Overall",
+    "value": 0.24,
     "display": "Percent"
   },
   {
@@ -3696,17 +3682,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "RSV visits by age group",
-    "submetric": "5-17",
-    "value": 0.02,
+    "submetric": "0-4",
+    "value": 1.77,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "RSV visits by age group",
-    "submetric": "5-17",
-    "value": 0.0,
+    "submetric": "0-4",
+    "value": 1.97,
     "display": "Percent"
   },
   {
@@ -3780,17 +3766,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "RSV visits by age group",
-    "submetric": "18-64",
-    "value": 0.0,
+    "submetric": "5-17",
+    "value": 0.08,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "RSV visits by age group",
-    "submetric": "18-64",
-    "value": 0.0,
+    "submetric": "5-17",
+    "value": 0.14,
     "display": "Percent"
   },
   {
@@ -3864,17 +3850,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "RSV visits by age group",
-    "submetric": "65+",
-    "value": 0.01,
+    "submetric": "18-64",
+    "value": 0.03,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "RSV visits by age group",
-    "submetric": "65+",
-    "value": 0.0,
+    "submetric": "18-64",
+    "value": 0.05,
     "display": "Percent"
   },
   {
@@ -3948,17 +3934,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "RSV visits by borough",
-    "submetric": "Bronx",
-    "value": 0.02,
+    "date": "2025-11-29 00:00:00",
+    "metric": "RSV visits by age group",
+    "submetric": "65+",
+    "value": 0.06,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "RSV visits by borough",
-    "submetric": "Bronx",
-    "value": 0.03,
+    "date": "2025-12-06 00:00:00",
+    "metric": "RSV visits by age group",
+    "submetric": "65+",
+    "value": 0.05,
     "display": "Percent"
   },
   {
@@ -4032,17 +4018,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "RSV visits by borough",
-    "submetric": "Brooklyn",
-    "value": 0.01,
+    "submetric": "Bronx",
+    "value": 0.21,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "RSV visits by borough",
-    "submetric": "Brooklyn",
-    "value": 0.03,
+    "submetric": "Bronx",
+    "value": 0.38,
     "display": "Percent"
   },
   {
@@ -4116,17 +4102,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "RSV visits by borough",
-    "submetric": "Manhattan",
-    "value": 0.0,
+    "submetric": "Brooklyn",
+    "value": 0.26,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "RSV visits by borough",
-    "submetric": "Manhattan",
-    "value": 0.03,
+    "submetric": "Brooklyn",
+    "value": 0.23,
     "display": "Percent"
   },
   {
@@ -4200,17 +4186,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "RSV visits by borough",
-    "submetric": "Queens",
-    "value": 0.01,
+    "submetric": "Manhattan",
+    "value": 0.16,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "RSV visits by borough",
-    "submetric": "Queens",
-    "value": 0.01,
+    "submetric": "Manhattan",
+    "value": 0.17,
     "display": "Percent"
   },
   {
@@ -4284,17 +4270,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "RSV visits by borough",
-    "submetric": "Staten Island",
-    "value": 0.0,
+    "submetric": "Queens",
+    "value": 0.15,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "RSV visits by borough",
-    "submetric": "Staten Island",
-    "value": 0.0,
+    "submetric": "Queens",
+    "value": 0.13,
     "display": "Percent"
   },
   {
@@ -4368,17 +4354,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "RSV hospitalizations",
-    "submetric": "Overall",
-    "value": 0.03,
+    "date": "2025-11-29 00:00:00",
+    "metric": "RSV visits by borough",
+    "submetric": "Staten Island",
+    "value": 0.16,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "RSV hospitalizations",
-    "submetric": "Overall",
-    "value": 0.05,
+    "date": "2025-12-06 00:00:00",
+    "metric": "RSV visits by borough",
+    "submetric": "Staten Island",
+    "value": 0.33,
     "display": "Percent"
   },
   {
@@ -4452,17 +4438,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "RSV hospitalizations by age group",
-    "submetric": "0-4",
-    "value": 0.81,
+    "date": "2025-11-29 00:00:00",
+    "metric": "RSV hospitalizations",
+    "submetric": "Overall",
+    "value": 0.33,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "RSV hospitalizations by age group",
-    "submetric": "0-4",
-    "value": 2.27,
+    "date": "2025-12-06 00:00:00",
+    "metric": "RSV hospitalizations",
+    "submetric": "Overall",
+    "value": 0.31,
     "display": "Percent"
   },
   {
@@ -4532,21 +4518,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "RSV hospitalizations by age group",
     "submetric": "0-4",
-    "value": 4.53,
+    "value": 4.75,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "RSV hospitalizations by age group",
-    "submetric": "5-17",
-    "value": 0.0,
+    "submetric": "0-4",
+    "value": 7.53,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "RSV hospitalizations by age group",
-    "submetric": "5-17",
-    "value": 0.0,
+    "submetric": "0-4",
+    "value": 6.21,
     "display": "Percent"
   },
   {
@@ -4620,17 +4606,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "RSV hospitalizations by age group",
-    "submetric": "18-64",
-    "value": 0.02,
+    "submetric": "5-17",
+    "value": 0.0,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "RSV hospitalizations by age group",
-    "submetric": "18-64",
-    "value": 0.0,
+    "submetric": "5-17",
+    "value": 0.23,
     "display": "Percent"
   },
   {
@@ -4704,17 +4690,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "RSV hospitalizations by age group",
-    "submetric": "65+",
-    "value": 0.0,
+    "submetric": "18-64",
+    "value": 0.04,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "RSV hospitalizations by age group",
-    "submetric": "65+",
-    "value": 0.0,
+    "submetric": "18-64",
+    "value": 0.02,
     "display": "Percent"
   },
   {
@@ -4788,17 +4774,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
-    "metric": "RSV hospitalizations by borough",
-    "submetric": "Bronx",
-    "value": 0.05,
+    "date": "2025-11-29 00:00:00",
+    "metric": "RSV hospitalizations by age group",
+    "submetric": "65+",
+    "value": 0.11,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
-    "metric": "RSV hospitalizations by borough",
-    "submetric": "Bronx",
-    "value": 0.05,
+    "date": "2025-12-06 00:00:00",
+    "metric": "RSV hospitalizations by age group",
+    "submetric": "65+",
+    "value": 0.13,
     "display": "Percent"
   },
   {
@@ -4868,21 +4854,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "RSV hospitalizations by borough",
     "submetric": "Bronx",
-    "value": 0.13,
+    "value": 0.16,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "RSV hospitalizations by borough",
-    "submetric": "Brooklyn",
-    "value": 0.06,
+    "submetric": "Bronx",
+    "value": 0.38,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "RSV hospitalizations by borough",
-    "submetric": "Brooklyn",
-    "value": 0.12,
+    "submetric": "Bronx",
+    "value": 0.56,
     "display": "Percent"
   },
   {
@@ -4952,21 +4938,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "RSV hospitalizations by borough",
     "submetric": "Brooklyn",
-    "value": 0.23,
+    "value": 0.24,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "RSV hospitalizations by borough",
-    "submetric": "Manhattan",
-    "value": 0.0,
+    "submetric": "Brooklyn",
+    "value": 0.45,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "RSV hospitalizations by borough",
-    "submetric": "Manhattan",
-    "value": 0.0,
+    "submetric": "Brooklyn",
+    "value": 0.32,
     "display": "Percent"
   },
   {
@@ -5036,21 +5022,21 @@
     "date": "2025-11-22 00:00:00",
     "metric": "RSV hospitalizations by borough",
     "submetric": "Manhattan",
-    "value": 0.2,
+    "value": 0.21,
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "RSV hospitalizations by borough",
-    "submetric": "Queens",
-    "value": 0.0,
+    "submetric": "Manhattan",
+    "value": 0.15,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "RSV hospitalizations by borough",
-    "submetric": "Queens",
-    "value": 0.0,
+    "submetric": "Manhattan",
+    "value": 0.13,
     "display": "Percent"
   },
   {
@@ -5124,17 +5110,17 @@
     "display": "Percent"
   },
   {
-    "date": "2025-09-06 00:00:00",
+    "date": "2025-11-29 00:00:00",
     "metric": "RSV hospitalizations by borough",
-    "submetric": "Staten Island",
-    "value": 0.0,
+    "submetric": "Queens",
+    "value": 0.2,
     "display": "Percent"
   },
   {
-    "date": "2025-09-13 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "RSV hospitalizations by borough",
-    "submetric": "Staten Island",
-    "value": 0.0,
+    "submetric": "Queens",
+    "value": 0.04,
     "display": "Percent"
   },
   {
@@ -5208,59 +5194,73 @@
     "display": "Percent"
   },
   {
-    "date": "2025-11-22 00:00:00",
-    "metric": "Respiratory panel results",
-    "submetric": "Adenovirus",
-    "value": 3.0,
+    "date": "2025-11-29 00:00:00",
+    "metric": "RSV hospitalizations by borough",
+    "submetric": "Staten Island",
+    "value": 0.45,
     "display": "Percent"
   },
   {
-    "date": "2025-11-22 00:00:00",
+    "date": "2025-12-06 00:00:00",
+    "metric": "RSV hospitalizations by borough",
+    "submetric": "Staten Island",
+    "value": 0.75,
+    "display": "Percent"
+  },
+  {
+    "date": "2025-12-06 00:00:00",
     "metric": "Respiratory panel results",
-    "submetric": "Human Coronaviruses",
+    "submetric": "Adenovirus",
     "value": 1.0,
     "display": "Percent"
   },
   {
-    "date": "2025-11-22 00:00:00",
+    "date": "2025-12-06 00:00:00",
+    "metric": "Respiratory panel results",
+    "submetric": "Human Coronaviruses",
+    "value": 3.0,
+    "display": "Percent"
+  },
+  {
+    "date": "2025-12-06 00:00:00",
     "metric": "Respiratory panel results",
     "submetric": "SARS-CoV-2",
     "value": 2.0,
     "display": "Percent"
   },
   {
-    "date": "2025-11-22 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Respiratory panel results",
     "submetric": "Human Metapneumovirus",
-    "value": 1.0,
+    "value": 2.0,
     "display": "Percent"
   },
   {
-    "date": "2025-11-22 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Respiratory panel results",
     "submetric": "Enterovirus/Rhinovirus",
-    "value": 21.0,
+    "value": 24.0,
     "display": "Percent"
   },
   {
-    "date": "2025-11-22 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Respiratory panel results",
     "submetric": "Influenza",
-    "value": 9.0,
+    "value": 16.0,
     "display": "Percent"
   },
   {
-    "date": "2025-11-22 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Respiratory panel results",
     "submetric": "Parainfluenza",
     "value": 6.0,
     "display": "Percent"
   },
   {
-    "date": "2025-11-22 00:00:00",
+    "date": "2025-12-06 00:00:00",
     "metric": "Respiratory panel results",
     "submetric": "Respiratory Syncytial Virus",
-    "value": 3.0,
+    "value": 4.0,
     "display": "Percent"
   }
 ]

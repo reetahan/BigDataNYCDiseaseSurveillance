@@ -65,13 +65,13 @@ def run_pipeline(skip_relevance=False, skip_dedupe=False, skip_location=False, s
 
         relevance_consumer = RelevanceConsumer(
             kafka_bootstrap_servers="localhost:9092",
-            kafka_topics="reddit,bluesky,rss,nyc_311,nyc_press,nyc_covid",
+            kafka_topics="reddit.health,bluesky.health,rss.health,nyc_311.health,nyc_press.health,nyc_covid.health",
             output_dir="data/relevance",
             checkpoint_dir="checkpoints/relevance"
         )
 
         print("Starting Relevance Consumer...")
-        print("Reading from Kafka topics: reddit, bluesky, rss, nyc_311, nyc_press, nyc_covid")
+        print("Reading from Kafka topics: reddit.health, bluesky.health, rss.health, nyc_311.health, nyc_press.health, nyc_covid.health")
         print("Output: data/relevance/relevant/\n")
 
         try:

@@ -115,21 +115,42 @@ def start_kafka():
 
     return success
 
-def run_scrapers():
+def run_scrapers(use_local=False):
     """Run all data scrapers"""
     print_step(2, "DATA COLLECTION", "Running all scrapers (Reddit, Bluesky, RSS, NYC APIs)")
+    
+    if use_local:
+        # Check if Reddit data exists locally
+        reddit_data = list(Path('data/reddit').glob('*.json')) if Path('data/reddit').exists() else []
+        bluesky_data = list(Path('data/bluesky').glob('*.json')) if Path('data/bluesky').exists() else []
+        
+        if not reddit_data and not bluesky_data:
+            print(f"{Colors.RED}✗ No local Reddit or Bluesky data found in data/reddit/ or data/bluesky/{Colors.END}")
+            print(f"{Colors.RED}  Run without --use-local to scrape fresh data{Colors.END}")
+            return False
+        
+        if reddit_data:
+            print(f"{Colors.GREEN}✓ Using local Reddit data: {len(reddit_data)} file(s) in data/reddit/{Colors.END}")
+        if bluesky_data:
+            print(f"{Colors.GREEN}✓ Using local Bluesky data: {len(bluesky_data)} file(s) in data/bluesky/{Colors.END}")
 
     scrapers = [
-        ("./venv/bin/python src/scrapers/reddit_scraper.py", "Reddit scraper"),
-        ("./venv/bin/python src/scrapers/bluesky_scraper.py", "Bluesky scraper"),
-        ("./venv/bin/python src/scrapers/rss_scraper.py", "RSS scraper"),
-        ("./venv/bin/python src/scrapers/nyc_311_scraper.py", "NYC 311 scraper"),
-        ("./venv/bin/python src/scrapers/nyc_press_scraper.py", "NYC Press scraper"),
-        ("./venv/bin/python src/scrapers/nyc_covid_scraper.py", "NYC COVID scraper"),
+        ("python src/scrapers/redditscraper.py", "Reddit scraper"),
+        ("python src/scrapers/run_bluesky_scraper.py", "Bluesky scraper"),
+        ("python src/scrapers/scraper_rss.py", "RSS scraper"),
+        ("python src/scrapers/scraper_311.py", "NYC 311 scraper"),
+        ("python src/scrapers/nyc_health_press_release_scraper.py", "NYC Press scraper"),
+        ("python src/scrapers/nyc_covid_rsv_flu_official_scraper.py", "NYC COVID scraper"),
     ]
 
     all_success = True
     for cmd, desc in scrapers:
+        # Skip Reddit and Bluesky scrapers if using local data
+        if use_local and ("reddit" in cmd or "bluesky" in cmd):
+            print(f"{Colors.CYAN}▶ {desc} (skipped - using local data)...{Colors.END}")
+            print(f"{Colors.GREEN}✓ {desc} skipped{Colors.END}")
+            continue
+            
         success = run_command(cmd, desc, timeout=120)
         if not success:
             print(f"{Colors.YELLOW}⚠ {desc} failed, but continuing...{Colors.END}")
@@ -142,7 +163,7 @@ def publish_to_kafka():
     print_step(3, "KAFKA PUBLISHING", "Publishing scraped data to Kafka topics")
 
     return run_command(
-        "./venv/bin/python src/kafka_publisher.py",
+        "python src/kafka_publisher.py",
         "Publishing to Kafka",
         timeout=300
     )
@@ -181,7 +202,7 @@ def run_pipeline(skip_relevance=False):
 
     skip_flag = "--skip-relevance" if skip_relevance else ""
     return run_command(
-        f'{env_vars}./venv/bin/python src/run_chained_pipeline.py {skip_flag}',
+        f'{env_vars}python src/run_chained_pipeline.py {skip_flag}',
         "Running chained pipeline",
         timeout=600
     )
@@ -191,7 +212,7 @@ def load_chromadb():
     print_step(5, "CHROMADB LOADING", "Loading embeddings into vector database")
 
     return run_command(
-        './venv/bin/python src/load_chromadb.py --embeddings-dir data/embeddings --clear',
+        'python src/load_chromadb.py --embeddings-dir data/embeddings --clear',
         "Loading ChromaDB",
         timeout=120
     )
@@ -226,6 +247,9 @@ Examples:
   # Run everything from scratch
   python run_project.py
 
+  # Use existing Reddit and Bluesky data (data/reddit/*.json, data/bluesky/*.json)
+  python run_project.py --use-local
+
   # Skip scrapers (use existing data)
   python run_project.py --skip-scrapers
 
@@ -237,6 +261,8 @@ Examples:
         """
     )
 
+    parser.add_argument('--use-local', action='store_true',
+                        help='Use existing Reddit and Bluesky data from data/reddit/ and data/bluesky/ instead of scraping')
     parser.add_argument('--skip-scrapers', action='store_true',
                         help='Skip data scraping (use existing data)')
     parser.add_argument('--skip-publishing', action='store_true',
@@ -267,8 +293,12 @@ Examples:
 
     # Step 2: Run scrapers
     if not args.skip_scrapers:
-        if not run_scrapers():
-            print(f"\n{Colors.YELLOW}⚠ WARNING: Some scrapers failed, but continuing...{Colors.END}")
+        if not run_scrapers(use_local=args.use_local):
+            if args.use_local:
+                print(f"\n{Colors.RED}❌ FAILED: No local data found{Colors.END}")
+                sys.exit(1)
+            else:
+                print(f"\n{Colors.YELLOW}⚠ WARNING: Some scrapers failed, but continuing...{Colors.END}")
     else:
         print_step(2, "DATA COLLECTION (SKIPPED)", "Using existing scraped data")
 

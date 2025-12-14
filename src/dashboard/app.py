@@ -285,11 +285,11 @@ def get_forecast_summary(forecast_df):
 # Main dashboard
 def main():
     # Header
-    st.title("🏥 NYC Disease Surveillance Dashboard")
+    st.title("NYC Disease Surveillance Dashboard")
     st.markdown("Real-time monitoring of disease events across New York City")
     
     # Sidebar controls
-    st.sidebar.header("⚙️ Dashboard Controls")
+    st.sidebar.header("Dashboard Controls")
     auto_refresh = st.sidebar.checkbox("Auto-refresh (30s)", value=True)
     time_window = st.sidebar.selectbox(
         "Time Window",
@@ -300,12 +300,6 @@ def main():
     
     st.sidebar.markdown("---")
     st.sidebar.markdown(f"**Last updated:** {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    
-    # Refresh placeholder
-    if auto_refresh:
-        st.sidebar.info("Dashboard will refresh in 30 seconds")
-        time.sleep(30)
-        st.rerun()
     
     # Try to fetch data
     try:
@@ -371,30 +365,6 @@ def main():
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.info("No borough data available")
-        
-        # Time series
-        st.subheader("📈 Event Timeline")
-        ts_df = fetch_time_series(time_window)
-        if not ts_df.empty:
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(
-                x=ts_df['hour'],
-                y=ts_df['count'],
-                mode='lines+markers',
-                line=dict(color='#1f77b4', width=2),
-                marker=dict(size=6),
-                fill='tozeroy',
-                fillcolor='rgba(31, 119, 180, 0.2)'
-            ))
-            fig.update_layout(
-                xaxis_title="Time",
-                yaxis_title="Number of Events",
-                hovermode='x unified',
-                height=350
-            )
-            st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.info("No time series data available")
         
         # Bottom row: Symptoms, Severity, Source
         col1, col2, col3 = st.columns(3)
@@ -463,6 +433,12 @@ def main():
     except Exception as e:
         st.error(f"❌ Error loading dashboard: {str(e)}")
         st.code(str(e))
+    
+    # Auto-refresh at the very end, after all content is rendered
+    if auto_refresh:
+        st.sidebar.info("Dashboard will refresh in 30 seconds")
+        time.sleep(30)
+        st.rerun()
 
 if __name__ == "__main__":
     main()

@@ -8,7 +8,7 @@ import sys
 import os
 
 # Add vector_db to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'vector_db'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'database'))
 
 from chromadb_client import main
 

@@ -25,6 +25,7 @@ from datetime import datetime
 from typing import List, Dict, Optional
 import logging
 import hashlib
+import uuid
 
 from pyspark.sql import SparkSession, DataFrame
 import numpy as np
@@ -167,10 +168,31 @@ class EmbeddingConsumer:
         # Generate embedding
         embedding_vector = self.embedding_model.encode(embedding_text)
 
-        # Create unique ID (for vector DB)
-        record_id = record.get('post_id') or record.get('id') or hashlib.md5(
-            (embedding_text + str(record.get('timestamp', ''))).encode()
-        ).hexdigest()
+        # Create unique ID - use original IDs if available, otherwise generate UUID
+        # This ensures no duplicates even if multiple records have identical text/timestamps
+        record_id = record.get('post_id') or record.get('id')
+        if not record_id:
+            # Fallback: Create deterministic hash from original_data if available
+            original_data = record.get('original_data', '')
+            if original_data:
+                # Parse original_data to get source-specific IDs
+                try:
+                    if isinstance(original_data, str):
+                        orig_dict = json.loads(original_data)
+                    else:
+                        orig_dict = original_data
+                    
+                    # Try various ID fields from different sources
+                    record_id = (orig_dict.get('id') or 
+                                orig_dict.get('post_id') or 
+                                orig_dict.get('unique_key') or
+                                orig_dict.get('complaint_number'))
+                except:
+                    pass
+            
+            # If still no ID, generate UUID to guarantee uniqueness
+            if not record_id:
+                record_id = str(uuid.uuid4())
 
         # Extract metadata for vector DB filtering
         diseases = []

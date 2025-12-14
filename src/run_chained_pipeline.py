@@ -67,15 +67,19 @@ def run_pipeline(skip_relevance=False, skip_dedupe=False, skip_location=False, s
             kafka_bootstrap_servers="localhost:9092",
             kafka_topics="reddit.health,bluesky.health,rss.health,nyc_311.health,nyc_press.health,nyc_covid.health",
             output_dir="data/relevance",
-            checkpoint_dir="checkpoints/relevance"
+            checkpoint_dir="checkpoints/relevance",
+            auto_stop_on_empty=True,  # Auto-stop when Kafka queue is empty (pipeline mode)
+            empty_batches_before_stop=3  # Stop after 3 consecutive empty batches
         )
 
         print("Starting Relevance Consumer...")
         print("Reading from Kafka topics: reddit.health, bluesky.health, rss.health, nyc_311.health, nyc_press.health, nyc_covid.health")
-        print("Output: data/relevance/relevant/\n")
+        print("Output: data/relevance/relevant/")
+        print("Mode: Auto-stop when all messages processed\n")
 
         try:
             relevance_consumer.start()
+            print("\n✓ Relevance analysis completed")
         except KeyboardInterrupt:
             print("\n✓ Relevance analysis completed (interrupted by user)")
         except Exception as e:

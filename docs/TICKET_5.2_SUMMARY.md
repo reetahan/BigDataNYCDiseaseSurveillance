@@ -1,24 +1,27 @@
-````markdown
-# Disease Outbreak Forecasting - Complete Testing Guide (Summary)
+# Disease Outbreak Forecasting - Testing Guide (Summary)
+
+A concise guide for setting up, testing, and running the Disease Outbreak Forecasting system.  
+Covers software prerequisites, Python dependencies, PostgreSQL setup, testing procedures, troubleshooting, and performance benchmarks.
+
+---
 
 ## 1. Prerequisites Setup
 
 ### 1.1 Install Required Software
 
-**PostgreSQL Installation**
+**PostgreSQL Installation:**
 
-- **macOS**:
-  ```bash
-  brew install postgresql@15
-  brew services start postgresql@15
-````
+- **macOS**
+```bash
+brew install postgresql@15
+brew services start postgresql@15
+```
 
-* **Ubuntu/Debian**:
-
-  ```bash
-  sudo apt-get update
-  sudo apt-get install postgresql postgresql-contrib
-  ```
+- **Ubuntu/Debian**
+```bash
+sudo apt-get update
+sudo apt-get install postgresql postgresql-contrib
+```
 * **Windows**: Download from [postgresql.org](https://www.postgresql.org/download/)
 
 ### 1.2 Install Python Dependencies
@@ -149,9 +152,5 @@ head test_outbreak_forecast.csv
 * Check PostgreSQL logs: `tail -f /usr/local/var/log/postgres.log`
 * Review Spark logs for JDBC issues
 
-```
 
----
-
-I can also create a **more compact “cheat-sheet version”** if you want something under 1 page for quick reference. Do you want me to do that?
 ```

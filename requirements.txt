@@ -23,3 +23,8 @@ geopy==2.4.1
 shapely==2.0.6
 
 numpy>=1.24.0,<2.0.0
+
+# Dashboard (Ticket 6.1)
+streamlit==1.39.0
+plotly==5.24.1
+psycopg2-binary==2.9.10

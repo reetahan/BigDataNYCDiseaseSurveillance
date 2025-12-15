@@ -372,6 +372,14 @@ def main():
                         help='Clear existing collection before loading')
     parser.add_argument('--query', type=str,
                         help='Run a test query after loading')
+    parser.add_argument('--n-results', type=int, default=5,
+                        help='Number of results to return for query (default: 5)')
+    parser.add_argument('--borough', type=str,
+                        help='Filter query results by borough')
+    parser.add_argument('--disease', type=str,
+                        help='Filter query results by disease')
+    parser.add_argument('--query-only', action='store_true',
+                        help='Only run query, skip loading embeddings')
 
     args = parser.parse_args()
 
@@ -385,37 +393,51 @@ def main():
     if args.clear:
         chroma_client.clear_collection()
 
-    # Load embeddings
-    logger.info("="*60)
-    logger.info("Loading Embeddings into ChromaDB")
-    logger.info("="*60)
+    # Load embeddings (unless query-only mode)
+    if not args.query_only:
+        logger.info("="*60)
+        logger.info("Loading Embeddings into ChromaDB")
+        logger.info("="*60)
 
-    total_loaded = chroma_client.load_embeddings_from_directory(args.embeddings_dir)
+        total_loaded = chroma_client.load_embeddings_from_directory(args.embeddings_dir)
 
-    # Print statistics
-    stats = chroma_client.get_statistics()
-    logger.info("\n" + "="*60)
-    logger.info("ChromaDB Statistics")
-    logger.info("="*60)
-    logger.info(f"Total Documents: {stats['total_documents']}")
-    logger.info(f"Collection: {stats['collection_name']}")
+        # Print statistics
+        stats = chroma_client.get_statistics()
+        logger.info("\n" + "="*60)
+        logger.info("ChromaDB Statistics")
+        logger.info("="*60)
+        logger.info(f"Total Documents: {stats['total_documents']}")
+        logger.info(f"Collection: {stats['collection_name']}")
 
-    if 'sample_diseases' in stats:
-        logger.info(f"Diseases (sample): {', '.join(stats['sample_diseases'][:10])}")
-    if 'sample_boroughs' in stats:
-        logger.info(f"Boroughs: {', '.join(stats['sample_boroughs'])}")
-    if 'severity_distribution' in stats:
-        logger.info(f"Severity Distribution: {stats['severity_distribution']}")
+        if 'sample_diseases' in stats:
+            logger.info(f"Diseases (sample): {', '.join(stats['sample_diseases'][:10])}")
+        if 'sample_boroughs' in stats:
+            logger.info(f"Boroughs: {', '.join(stats['sample_boroughs'])}")
+        if 'severity_distribution' in stats:
+            logger.info(f"Severity Distribution: {stats['severity_distribution']}")
 
     # Run test query if provided
     if args.query:
         logger.info("\n" + "="*60)
         logger.info(f"Test Query: '{args.query}'")
+        if args.borough:
+            logger.info(f"Filtering by Borough: {args.borough}")
+        if args.disease:
+            logger.info(f"Filtering by Disease: {args.disease}")
+        logger.info(f"Results: {args.n_results}")
         logger.info("="*60)
+
+        # Build where filter
+        where_filter = {}
+        if args.borough:
+            where_filter['borough'] = args.borough
+        if args.disease:
+            where_filter['diseases'] = {'$contains': args.disease}
 
         results = chroma_client.query(
             query_texts=[args.query],
-            n_results=5
+            n_results=args.n_results,
+            where=where_filter if where_filter else None
         )
 
         for i, (doc, metadata, distance) in enumerate(zip(
@@ -429,7 +451,8 @@ def main():
             logger.info(f"  Location: {metadata.get('neighborhood', 'N/A')}, {metadata.get('borough', 'N/A')}")
             logger.info(f"  Severity: {metadata.get('severity', 'N/A')}")
 
-    logger.info("\n✓ ChromaDB loading completed successfully!")
+    if not args.query_only:
+        logger.info("\n✓ ChromaDB loading completed successfully!")
 
 
 if __name__ == "__main__":

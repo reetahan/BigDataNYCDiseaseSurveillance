@@ -444,11 +444,14 @@ class SpatialClusteringAnalyzer:
 
             cluster_data = pdf[pdf[cluster_col] == cluster_id]
             cluster_ids = cluster_data['id'].tolist()
+            
+            # Deduplicate IDs (same event may appear multiple times)
+            unique_cluster_ids = list(set(cluster_ids))
 
             try:
                 # Get embeddings for cluster members from ChromaDB
                 results = self.chroma_collection.get(
-                    ids=[str(cid) for cid in cluster_ids[:100]],  # Limit to 100 for performance
+                    ids=[str(cid) for cid in unique_cluster_ids[:100]],  # Limit to 100 for performance
                     include=['embeddings']
                 )
 

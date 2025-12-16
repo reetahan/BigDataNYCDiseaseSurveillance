@@ -32,15 +32,44 @@ if df.empty:
   except Exception as e:
     print(f"Exception writing empty anomalies.csv: {e}")
 else:
-  df["mean"] = df.groupby(["borough","disease"])["cnt"].transform(lambda x: x.rolling(7, min_periods=3).mean())
-  df["std"]  = df.groupby(["borough","disease"])["cnt"].transform(lambda x: x.rolling(7, min_periods=3).std())
+  # Sort by borough, disease, and day to ensure proper rolling window
+  df = df.sort_values(['borough', 'disease', 'day']).reset_index(drop=True)
+  
+  # Calculate expanding mean and std for each borough-disease combination
+  df["mean"] = df.groupby(["borough","disease"])["cnt"].transform(
+      lambda x: x.shift(1).expanding(min_periods=1).mean()
+  )
+  df["std"] = df.groupby(["borough","disease"])["cnt"].transform(
+      lambda x: x.shift(1).expanding(min_periods=1).std()
+  )
+  
+  # Calculate z-score, handling edge cases
+  # When std is 0 or NaN, use percentage change instead
   df["z_score"] = (df["cnt"] - df["mean"]) / df["std"]
-  anomalies = df[(df["std"].notna()) & (df["std"] != 0) & (df["z_score"] > 1.5)]
-  print(f"Anomalies found: {anomalies.shape[0]}")
+  
+  # For cases where std=0 (no variance), use percentage change as proxy
+  # If count increases by more than 100%, flag as anomaly
+  pct_change = ((df["cnt"] - df["mean"]) / df["mean"]).abs()
+  df.loc[df["std"] == 0, "z_score"] = pct_change.where(pct_change > 1.0, 0)
+  
+  # Fill NaN z-scores (first occurrence) with 0
+  df["z_score"] = df["z_score"].fillna(0)
+  
+  # Save ALL records (not just anomalies) so dashboard can show proper percentage
+  print(f"\nSample of processed data:")
+  print(df[['day', 'borough', 'disease', 'cnt', 'mean', 'std', 'z_score']].head(15))
+  
+  # Count anomalies for logging (z-score > 1.5)
+  anomalies = df[(df["mean"].notna()) & (df["z_score"] > 1.5)]
+  print(f"\nAnomalies found: {anomalies.shape[0]} out of {len(df)} records ({anomalies.shape[0]/len(df)*100:.1f}%)")
+  
   try:
-    anomalies.to_csv(OUTPUT_PATH, index=False)
-    print(f"Wrote: {OUTPUT_PATH}")
+    df.to_csv(OUTPUT_PATH, index=False)
+    print(f"Wrote all records to: {OUTPUT_PATH}")
   except Exception as e:
     print(f"Exception writing anomalies.csv: {e}")
-  print("Anomalies detected:")
-  print(anomalies)
+  
+  print("\nTop anomalies detected:")
+  print(anomalies[['day', 'borough', 'disease', 'cnt', 'mean', 'std', 'z_score']].head(20))
+
+  print(df.sample(10))

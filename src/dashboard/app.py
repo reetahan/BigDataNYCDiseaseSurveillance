@@ -220,7 +220,7 @@ def load_latest_spatial_clusters():
 def load_latest_forecast():
     """Load latest outbreak forecast"""
     try:
-        forecast_file = "forecast/outbreak_forecast.csv"
+        forecast_file = "data/forecast/outbreak_forecast.csv"
         
         if not os.path.exists(forecast_file):
             return None

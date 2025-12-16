@@ -137,6 +137,7 @@ celerybeat.pid
 
 # Environments
 .env
+*.env
 .envrc
 .venv
 env/
@@ -220,6 +221,7 @@ Thumbs.db
 # Data Directories
 data_processed/
 .crc
+*.crc
 
 # Spark Checkpoints
 checkpoints/
@@ -237,3 +239,6 @@ chroma.sqlite3
 
 # TimescaleDB volume (if using local mount)
 timescale_data/
+
+*.sqlite3
+*.bin

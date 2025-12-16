@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
 """
 NYC Disease Surveillance - Master Project Runner
-One-click execution: Scrapers → Kafka → Pipeline (3.1-3.4) → ChromaDB
+One-click execution: Scrapers → Kafka → Pipeline → Databases → Analysis → Dashboard
 
 This script runs the entire project from start to finish:
-1. Start Docker (Kafka)
+1. Start Docker (Kafka + TimescaleDB)
 2. Run all scrapers (Reddit, Bluesky, RSS, NYC APIs)
 3. Publish data to Kafka
 4. Run chained pipeline (Relevance → Dedup → Location → Embeddings)
 5. Load embeddings into ChromaDB
+6. Load data into TimescaleDB
+7. Run spatial clustering analysis (DBSCAN)
+8. Run outbreak forecasting (time-series prediction)
+9. Deploy real-time dashboard (Streamlit)
 
 Usage:
-    python run_project.py                    # Full run
-    python run_project.py --skip-scrapers    # Start from existing data
-    python run_project.py --skip-chromadb    # Don't load to ChromaDB
+    python run_project.py                        # Full run + prompt for dashboard
+    python run_project.py --dashboard-only       # Just start dashboard
+    python run_project.py --skip-scrapers        # Start from existing data
+    python run_project.py --skip-analysis        # Skip clustering/forecasting
+    python run_project.py --skip-dashboard       # Don't deploy dashboard
 """
 
 import sys
@@ -217,24 +223,109 @@ def load_chromadb():
         timeout=120
     )
 
+def start_timescaledb():
+    """Start TimescaleDB using docker-compose"""
+    print_step(6, "TIMESCALEDB STARTUP", "Starting TimescaleDB for time-series analysis")
+
+    # Check if already running
+    result = subprocess.run(
+        "docker-compose ps | grep timescaledb",
+        shell=True,
+        capture_output=True,
+        text=True
+    )
+
+    if "Up" in result.stdout:
+        print(f"{Colors.GREEN}✓ TimescaleDB is already running{Colors.END}")
+        return True
+
+    # Start TimescaleDB
+    success = run_command(
+        "docker-compose up -d timescaledb",
+        "Starting TimescaleDB container"
+    )
+
+    if success:
+        print(f"{Colors.YELLOW}⏳ Waiting 10 seconds for TimescaleDB to initialize...{Colors.END}")
+        time.sleep(10)
+        print(f"{Colors.GREEN}✓ TimescaleDB is ready{Colors.END}")
+
+    return success
+
+def load_timescaledb():
+    """Load data into TimescaleDB"""
+    print_step(7, "TIMESCALEDB LOADING", "Loading enriched data into TimescaleDB")
+
+    return run_command(
+        'python src/database/psql_db_client.py --input-dir src/data/embeddings',
+        "Loading TimescaleDB",
+        timeout=300
+    )
+
+def run_spatial_clustering():
+    """Run spatial clustering analysis"""
+    print_step(8, "SPATIAL CLUSTERING", "Analyzing geographic disease hotspots with DBSCAN")
+
+    return run_command(
+        'python src/spatial_clustering.py --algorithm dbscan --eps-km 2.0 --min-samples 3',
+        "Running spatial clustering",
+        timeout=180
+    )
+
+def run_outbreak_forecasting():
+    """Run disease outbreak forecasting"""
+    print_step(9, "OUTBREAK FORECASTING", "Generating 14-day disease outbreak forecasts")
+
+    return run_command(
+        'python src/disease_outbreak_forecaster.py',
+        "Running outbreak forecasting",
+        timeout=180
+    )
+
+def deploy_dashboard():
+    """Deploy Streamlit dashboard"""
+    print_step(10, "DASHBOARD DEPLOYMENT", "Starting real-time surveillance dashboard")
+
+    print(f"{Colors.CYAN}🌐 Dashboard URL: http://localhost:8501{Colors.END}")
+    print(f"{Colors.YELLOW}⚠ Dashboard will run in foreground. Press Ctrl+C to stop.{Colors.END}")
+    print(f"{Colors.YELLOW}⚠ To run in background, use: streamlit run src/dashboard/app.py &{Colors.END}\n")
+
+    # Run dashboard in foreground (will block)
+    return run_command(
+        'streamlit run src/dashboard/app.py',
+        "Starting Streamlit dashboard",
+        timeout=None  # No timeout for dashboard
+    )
+
 def print_summary():
     """Print final summary"""
     print_banner("PROJECT RUN COMPLETED!", Colors.GREEN)
 
     print(f"{Colors.BOLD}📊 Output Summary:{Colors.END}")
-    print(f"  1. Scraped data:       {Colors.CYAN}data/scraped/{Colors.END}")
-    print(f"  2. Kafka topics:       {Colors.CYAN}reddit, bluesky, rss, nyc_311, nyc_press, nyc_covid{Colors.END}")
-    print(f"  3. Relevant records:   {Colors.CYAN}data/relevance/relevant/{Colors.END}")
-    print(f"  4. Unique records:     {Colors.CYAN}data/deduplicated/unique_*.json{Colors.END}")
-    print(f"  5. Location-enriched:  {Colors.CYAN}data/locations/{Colors.END}")
-    print(f"  6. Vector embeddings:  {Colors.CYAN}data/embeddings/{Colors.END}")
-    print(f"  7. ChromaDB:           {Colors.CYAN}data/chromadb/{Colors.END}")
+    print(f"  1. Scraped data:         {Colors.CYAN}data/scraped/{Colors.END}")
+    print(f"  2. Kafka topics:         {Colors.CYAN}reddit, bluesky, rss, nyc_311, nyc_press, nyc_covid{Colors.END}")
+    print(f"  3. Relevant records:     {Colors.CYAN}data/relevance/relevant/{Colors.END}")
+    print(f"  4. Unique records:       {Colors.CYAN}data/deduplicated/unique_*.json{Colors.END}")
+    print(f"  5. Location-enriched:    {Colors.CYAN}src/data/locations/{Colors.END}")
+    print(f"  6. Vector embeddings:    {Colors.CYAN}src/data/embeddings/{Colors.END}")
+    print(f"  7. ChromaDB:             {Colors.CYAN}data/chromadb/{Colors.END}")
+    print(f"  8. TimescaleDB:          {Colors.CYAN}localhost:5432/nyc_disease_surveillance{Colors.END}")
+    print(f"  9. Spatial clusters:     {Colors.CYAN}data/spatial_clusters/{Colors.END}")
+    print(f" 10. Outbreak forecasts:   {Colors.CYAN}data/forecast/{Colors.END}")
+    print(f" 11. Dashboard:            {Colors.CYAN}http://localhost:8501{Colors.END}")
 
     print(f"\n{Colors.BOLD}🔍 Query ChromaDB:{Colors.END}")
     print(f"  {Colors.CYAN}python src/load_chromadb.py --query \"flu outbreak in Brooklyn\"{Colors.END}")
 
-    print(f"\n{Colors.BOLD}📈 View Statistics:{Colors.END}")
-    print(f"  {Colors.CYAN}cat data/embeddings/embedding_summary_*.json | python -m json.tool{Colors.END}")
+    print(f"\n{Colors.BOLD}🗄️ Query TimescaleDB:{Colors.END}")
+    print(f"  {Colors.CYAN}docker exec -it timescaledb psql -U postgres -d nyc_disease_surveillance{Colors.END}")
+
+    print(f"\n{Colors.BOLD}📈 View Analysis Results:{Colors.END}")
+    print(f"  {Colors.CYAN}cat data/spatial_clusters/cluster_analysis_*.json | python -m json.tool{Colors.END}")
+    print(f"  {Colors.CYAN}cat data/forecast/outbreak_forecast.csv{Colors.END}")
+
+    print(f"\n{Colors.BOLD}🌐 Access Dashboard:{Colors.END}")
+    print(f"  {Colors.CYAN}Open http://localhost:8501 in your browser{Colors.END}")
     print()
 
 def main():
@@ -244,7 +335,7 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Run everything from scratch
+  # Run everything from scratch (will prompt for dashboard at end)
   python run_project.py
 
   # Use existing Reddit and Bluesky data (data/reddit/*.json, data/bluesky/*.json)
@@ -253,11 +344,17 @@ Examples:
   # Skip scrapers (use existing data)
   python run_project.py --skip-scrapers
 
-  # Skip ChromaDB loading
-  python run_project.py --skip-chromadb
+  # Skip databases (ChromaDB + TimescaleDB)
+  python run_project.py --skip-chromadb --skip-timescaledb
 
-  # Skip scrapers and ChromaDB
-  python run_project.py --skip-scrapers --skip-chromadb
+  # Skip analysis (spatial clustering + forecasting)
+  python run_project.py --skip-analysis
+
+  # Run full pipeline but don't deploy dashboard
+  python run_project.py --skip-dashboard
+
+  # Just start the dashboard (assumes data already processed)
+  python run_project.py --dashboard-only
         """
     )
 
@@ -269,14 +366,28 @@ Examples:
                         help='Skip Kafka publishing (use existing Kafka topics)')
     parser.add_argument('--skip-chromadb', action='store_true',
                         help='Skip ChromaDB loading')
+    parser.add_argument('--skip-timescaledb', action='store_true',
+                        help='Skip TimescaleDB loading')
+    parser.add_argument('--skip-analysis', action='store_true',
+                        help='Skip spatial clustering and forecasting analysis')
+    parser.add_argument('--skip-dashboard', action='store_true',
+                        help='Skip dashboard deployment')
     parser.add_argument('--skip-kafka-start', action='store_true',
                         help='Skip Kafka startup (assume already running)')
+    parser.add_argument('--dashboard-only', action='store_true',
+                        help='Only deploy dashboard (skip all other steps)')
 
     args = parser.parse_args()
 
     print_banner("NYC DISEASE SURVEILLANCE - MASTER PROJECT RUNNER", Colors.HEADER)
 
     start_time = time.time()
+
+    # Dashboard-only mode
+    if args.dashboard_only:
+        print_step(0, "DASHBOARD-ONLY MODE", "Skipping all processing steps")
+        deploy_dashboard()
+        return
 
     # Step 0: Check Docker
     if not check_docker():
@@ -322,10 +433,52 @@ Examples:
     else:
         print_step(5, "CHROMADB LOADING (SKIPPED)", "Skipping vector database loading")
 
+    # Step 6: Start TimescaleDB
+    if not args.skip_timescaledb:
+        if not start_timescaledb():
+            print(f"\n{Colors.RED}❌ FAILED: Could not start TimescaleDB{Colors.END}")
+            print(f"{Colors.YELLOW}⚠ Continuing without TimescaleDB...{Colors.END}")
+    else:
+        print_step(6, "TIMESCALEDB STARTUP (SKIPPED)", "Using existing TimescaleDB instance")
+
+    # Step 7: Load TimescaleDB
+    if not args.skip_timescaledb:
+        if not load_timescaledb():
+            print(f"\n{Colors.YELLOW}⚠ WARNING: TimescaleDB loading failed{Colors.END}")
+    else:
+        print_step(7, "TIMESCALEDB LOADING (SKIPPED)", "Skipping TimescaleDB data loading")
+
+    # Step 8: Run Spatial Clustering
+    if not args.skip_analysis:
+        if not run_spatial_clustering():
+            print(f"\n{Colors.YELLOW}⚠ WARNING: Spatial clustering failed{Colors.END}")
+    else:
+        print_step(8, "SPATIAL CLUSTERING (SKIPPED)", "Skipping spatial analysis")
+
+    # Step 9: Run Outbreak Forecasting
+    if not args.skip_analysis:
+        if not run_outbreak_forecasting():
+            print(f"\n{Colors.YELLOW}⚠ WARNING: Outbreak forecasting failed{Colors.END}")
+    else:
+        print_step(9, "OUTBREAK FORECASTING (SKIPPED)", "Skipping forecasting analysis")
+
     # Summary
     elapsed = time.time() - start_time
     print_summary()
     print(f"{Colors.BOLD}⏱ Total execution time: {elapsed:.1f} seconds{Colors.END}\n")
+
+    # Step 10: Deploy Dashboard (if not skipped)
+    if not args.skip_dashboard:
+        print(f"\n{Colors.BOLD}{Colors.CYAN}Press Enter to deploy dashboard, or Ctrl+C to exit...{Colors.END}")
+        try:
+            input()
+            deploy_dashboard()
+        except KeyboardInterrupt:
+            print(f"\n{Colors.YELLOW}Dashboard deployment skipped{Colors.END}")
+    else:
+        print_step(10, "DASHBOARD (SKIPPED)", "Skipping dashboard deployment")
+        print(f"\n{Colors.CYAN}To start dashboard manually:{Colors.END}")
+        print(f"  {Colors.CYAN}streamlit run src/dashboard/app.py{Colors.END}\n")
 
 if __name__ == "__main__":
     try:

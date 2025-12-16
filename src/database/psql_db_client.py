@@ -241,18 +241,41 @@ class TimescaleDBClient:
 
         records = []
         for item in data:
-            # Extract ID - try original_data first, then top-level fields
-            record_id = None
+            # Extract source from original_data.source_file first
+            source = 'unknown'
+            original = None
             if 'original_data' in item:
-                # Parse original_data JSON string
                 try:
                     if isinstance(item['original_data'], str):
                         original = json.loads(item['original_data'])
                     else:
                         original = item['original_data']
-                    record_id = original.get('post_id') or original.get('id') or original.get('message_id')
+                    
+                    # Extract source from source_file path (e.g., "reddit_posts.json" -> "reddit")
+                    source_file = original.get('source_file', '')
+                    if 'reddit' in source_file.lower():
+                        source = 'reddit'
+                    elif 'bluesky' in source_file.lower():
+                        source = 'bluesky'
+                    elif '311' in source_file:
+                        source = 'nyc_311'
+                    elif 'rss' in source_file.lower():
+                        source = 'rss'
+                    elif 'press' in source_file.lower():
+                        source = 'nyc_press'
+                    elif 'covid' in source_file.lower() or 'respiratory' in source_file.lower():
+                        source = 'nyc_doh'
                 except:
                     pass
+            
+            # Fallback to top-level source field
+            if source == 'unknown':
+                source = item.get('source', 'unknown')
+            
+            # Extract ID - try original_data first, then top-level fields
+            record_id = None
+            if original:
+                record_id = original.get('post_id') or original.get('id') or original.get('message_id') or original.get('comment_id')
             
             # Fallback to top-level ID fields
             if not record_id:
@@ -261,11 +284,26 @@ class TimescaleDBClient:
             # If still no ID, generate one from timestamp + source
             if not record_id:
                 import hashlib
-                content = f"{item.get('source', 'unknown')}_{item.get('processed_at', '')}_{item.get('text_content', '')[:100]}"
+                content = f"{source}_{item.get('processed_at', '')}_{item.get('text_content', '')[:100]}"
                 record_id = hashlib.md5(content.encode()).hexdigest()
             
-            # Extract timestamp (use processed_at or created_at)
-            timestamp = item.get('processed_at') or item.get('created_at') or datetime.now().isoformat()
+            # Extract timestamp - PRIORITIZE ORIGINAL EVENT TIME, not processing time
+            # Try created_at/created_utc from original_data first
+            timestamp = None
+            if original:
+                timestamp = (original.get('created_at') or 
+                            original.get('created_utc') or 
+                            original.get('timestamp') or 
+                            original.get('scraped_at'))
+            
+            # Fallback to top-level created_at, then processed_at as last resort
+            if not timestamp:
+                timestamp = (item.get('created_at') or 
+                            item.get('created_utc') or 
+                            item.get('timestamp') or 
+                            item.get('scraped_at') or 
+                            item.get('processed_at') or 
+                            datetime.now().isoformat())
             
             # Parse diseases and symptoms from JSON strings if needed
             diseases = item.get('diseases_json')
@@ -294,7 +332,7 @@ class TimescaleDBClient:
             record = (
                 record_id,
                 timestamp,
-                item.get('source', 'unknown'),
+                source,  # Now properly extracted from source_file
                 item.get('text') or item.get('text_content'),
                 
                 # Relevance
@@ -327,6 +365,19 @@ class TimescaleDBClient:
                 json.dumps(item)
             )
             records.append(record)
+
+        # Deduplicate records by (id, timestamp) - keep last occurrence
+        seen = {}
+        for record in records:
+            key = (record[0], record[1])  # (id, timestamp)
+            seen[key] = record
+        
+        unique_records = list(seen.values())
+        
+        if len(records) != len(unique_records):
+            logger.warning(f"Removed {len(records) - len(unique_records)} duplicate (id, timestamp) pairs from batch")
+        
+        records = unique_records
 
         # Bulk insert
         insert_query = """

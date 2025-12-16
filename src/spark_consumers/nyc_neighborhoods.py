@@ -86,14 +86,18 @@ QUEENS_NEIGHBORHOODS = {
 # Bronx neighborhoods
 BRONX_NEIGHBORHOODS = {
     "Riverdale": {"lat_range": (40.88, 40.91), "lon_range": (-73.92, -73.89), "zips": ["10463", "10471"]},
-    "Kingsbridge": {"lat_range": (40.87, 40.89), "lon_range": (-73.91, -73.89), "zips": ["10463"]},
-    "Fordham": {"lat_range": (40.85, 40.87), "lon_range": (-73.90, -73.88), "zips": ["10458", "10468"]},
+    "Kingsbridge": {"lat_range": (40.87, 40.89), "lon_range": (-73.91, -73.89), "zips": ["10463", "10468"]},
+    "Fordham": {"lat_range": (40.85, 40.88), "lon_range": (-73.91, -73.86), "zips": ["10458", "10468", "10467"]},
     "Belmont": {"lat_range": (40.85, 40.86), "lon_range": (-73.89, -73.87), "zips": ["10458"]},
     "Morris Park": {"lat_range": (40.84, 40.86), "lon_range": (-73.86, -73.84), "zips": ["10461", "10462"]},
-    "Pelham Bay": {"lat_range": (40.85, 40.87), "lon_range": (-73.83, -73.80), "zips": ["10461", "10464"]},
+    "Pelham Bay": {"lat_range": (40.85, 40.87), "lon_range": (-73.83, -73.80), "zips": ["10461", "10464", "10465"]},
     "Hunts Point": {"lat_range": (40.81, 40.82), "lon_range": (-73.89, -73.87), "zips": ["10474"]},
     "Mott Haven": {"lat_range": (40.80, 40.82), "lon_range": (-73.93, -73.91), "zips": ["10451", "10454"]},
     "Concourse": {"lat_range": (40.83, 40.85), "lon_range": (-73.92, -73.90), "zips": ["10451", "10452", "10456"]},
+    "Tremont": {"lat_range": (40.84, 40.86), "lon_range": (-73.90, -73.88), "zips": ["10457"]},
+    "Soundview": {"lat_range": (40.81, 40.83), "lon_range": (-73.87, -73.85), "zips": ["10472", "10473"]},
+    "Throgs Neck": {"lat_range": (40.81, 40.83), "lon_range": (-73.83, -73.80), "zips": ["10465"]},
+    "Co-op City": {"lat_range": (40.87, 40.88), "lon_range": (-73.83, -73.81), "zips": ["10475"]},
 }
 
 # Staten Island neighborhoods

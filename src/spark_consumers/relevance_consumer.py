@@ -50,7 +50,9 @@ class RelevanceConsumer:
         kafka_bootstrap_servers: str = "localhost:9092",
         kafka_topics: str = "reddit.health,bluesky.health,rss.health,nyc_311.health,nyc_press.health,nyc_covid.health",
         output_dir: str = "data/relevance",
-        checkpoint_dir: str = "checkpoints/relevance"
+        checkpoint_dir: str = "checkpoints/relevance",
+        auto_stop_on_empty: bool = False,
+        empty_batches_before_stop: int = 3
     ):
         """
         Initialize the relevance consumer
@@ -60,17 +62,23 @@ class RelevanceConsumer:
             kafka_topics: Comma-separated list of Kafka topics to consume
             output_dir: Directory to write analyzed data
             checkpoint_dir: Spark checkpoint directory
+            auto_stop_on_empty: If True, stop after N consecutive empty batches (for pipeline mode)
+            empty_batches_before_stop: Number of consecutive empty batches before stopping
         """
         self.kafka_bootstrap_servers = kafka_bootstrap_servers
         self.kafka_topics = kafka_topics
         self.output_dir = output_dir
         self.checkpoint_dir = checkpoint_dir
+        self.auto_stop_on_empty = auto_stop_on_empty
+        self.empty_batches_before_stop = empty_batches_before_stop
 
         # Progress tracking
         self.records_processed = 0
         self.relevant_count = 0
         self.irrelevant_count = 0
         self.start_time = None
+        self.empty_batch_count = 0
+        self.should_stop = False
 
         # Create output directories
         os.makedirs(self.output_dir, exist_ok=True)
@@ -382,6 +390,21 @@ class RelevanceConsumer:
             try:
                 batch_count = batch_df.count()
                 
+                # Check for empty batches (auto-stop mode)
+                if self.auto_stop_on_empty:
+                    if batch_count == 0:
+                        self.empty_batch_count += 1
+                        print(f"Empty batch {self.empty_batch_count}/{self.empty_batches_before_stop}...")
+                        if self.empty_batch_count >= self.empty_batches_before_stop:
+                            print("\n" + "="*70)
+                            print("All Kafka messages processed. Stopping consumer...")
+                            print("="*70)
+                            self.should_stop = True
+                            return
+                    else:
+                        # Reset counter if we get data
+                        self.empty_batch_count = 0
+                
                 # Count relevant vs irrelevant
                 relevant_in_batch = batch_df.filter(col("is_relevant") == True).count()
                 irrelevant_in_batch = batch_count - relevant_in_batch
@@ -453,17 +476,34 @@ class RelevanceConsumer:
         print("Streaming queries started with progress tracking")
         print(f"Relevant records → {self.output_dir}/relevant")
         print(f"Irrelevant records → {self.output_dir}/irrelevant")
+        if self.auto_stop_on_empty:
+            print(f"Auto-stop enabled: will stop after {self.empty_batches_before_stop} consecutive empty batches")
 
         try:
-            progress_query.awaitTermination()
+            if self.auto_stop_on_empty:
+                # Poll for stop condition
+                import time
+                while not self.should_stop:
+                    time.sleep(2)  # Check every 2 seconds
+                    if not progress_query.isActive:
+                        break
+                
+                # Stop all queries gracefully
+                print("\n\nStopping consumers gracefully...")
+                progress_query.stop()
+                relevant_query.stop()
+                irrelevant_query.stop()
+            else:
+                # Normal mode: wait indefinitely
+                progress_query.awaitTermination()
+                
         except KeyboardInterrupt:
             print("\n\nStopping consumers...")
             progress_query.stop()
             relevant_query.stop()
             irrelevant_query.stop()
+        finally:
             self.spark.stop()
-            
-            # Final summary (same as before)
             
             # Final summary
             print("\n" + "="*70)

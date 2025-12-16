@@ -57,12 +57,13 @@ class ChromaDBClient:
         logger.info(f"Connected to collection: {self.collection_name}")
         logger.info(f"Current collection size: {self.collection.count()} documents")
 
-    def load_embeddings_from_file(self, embeddings_file: str) -> int:
+    def load_embeddings_from_file(self, embeddings_file: str, skip_duplicates: bool = True) -> int:
         """
         Load embeddings from a single JSON file into ChromaDB
 
         Args:
             embeddings_file: Path to embeddings JSON file
+            skip_duplicates: If True, skip documents with IDs already in collection
 
         Returns:
             Number of documents loaded
@@ -72,14 +73,44 @@ class ChromaDBClient:
         with open(embeddings_file, 'r') as f:
             embeddings_data = json.load(f)
 
-        # Prepare data for ChromaDB
+        # Get existing IDs if skipping duplicates
+        existing_ids = set()
+        if skip_duplicates:
+            try:
+                # Get all existing IDs in collection
+                existing_data = self.collection.get(limit=1000000, include=[])
+                existing_ids = set(existing_data['ids'])
+                logger.info(f"Found {len(existing_ids)} existing documents in collection")
+            except Exception as e:
+                logger.warning(f"Could not fetch existing IDs: {e}")
+
+        # Prepare data for ChromaDB - use dict to deduplicate within file
+        docs_by_id = {}
+        file_duplicates = 0
+
+        for doc in embeddings_data:
+            doc_id = doc['id']
+            
+            # Skip if ID already exists in collection
+            if skip_duplicates and doc_id in existing_ids:
+                continue
+            
+            # Deduplicate within this file (keep last occurrence)
+            if doc_id in docs_by_id:
+                file_duplicates += 1
+            
+            docs_by_id[doc_id] = doc
+
+        logger.info(f"Found {file_duplicates} duplicate IDs within file (keeping latest)")
+
+        # Now prepare lists for ChromaDB
         ids = []
         embeddings = []
         metadatas = []
         documents = []
 
-        for doc in embeddings_data:
-            ids.append(doc['id'])
+        for doc_id, doc in docs_by_id.items():
+            ids.append(doc_id)
             embeddings.append(doc['vector'])
             documents.append(doc['text'])
 
@@ -102,15 +133,32 @@ class ChromaDBClient:
 
             metadatas.append(metadata)
 
-        # Add to collection
-        self.collection.add(
-            ids=ids,
-            embeddings=embeddings,
-            metadatas=metadatas,
-            documents=documents
-        )
-
-        logger.info(f"Added {len(ids)} documents to ChromaDB")
+        # Add to collection in batches (ChromaDB has batch size limits)
+        if ids:
+            batch_size = 5000  # Safe batch size for ChromaDB
+            total_added = 0
+            
+            for i in range(0, len(ids), batch_size):
+                batch_ids = ids[i:i+batch_size]
+                batch_embeddings = embeddings[i:i+batch_size]
+                batch_metadatas = metadatas[i:i+batch_size]
+                batch_documents = documents[i:i+batch_size]
+                
+                self.collection.add(
+                    ids=batch_ids,
+                    embeddings=batch_embeddings,
+                    metadatas=batch_metadatas,
+                    documents=batch_documents
+                )
+                total_added += len(batch_ids)
+                logger.info(f"Added batch {i//batch_size + 1}: {len(batch_ids)} documents (total: {total_added}/{len(ids)})")
+            
+            logger.info(f"Successfully added {total_added} new documents to ChromaDB")
+        
+        skipped = len(embeddings_data) - len(docs_by_id)
+        if skipped > 0:
+            logger.info(f"Skipped {skipped} documents (already in collection)")
+            
         return len(ids)
 
     def load_embeddings_from_directory(self, embeddings_dir: str) -> int:
@@ -324,6 +372,14 @@ def main():
                         help='Clear existing collection before loading')
     parser.add_argument('--query', type=str,
                         help='Run a test query after loading')
+    parser.add_argument('--n-results', type=int, default=5,
+                        help='Number of results to return for query (default: 5)')
+    parser.add_argument('--borough', type=str,
+                        help='Filter query results by borough')
+    parser.add_argument('--disease', type=str,
+                        help='Filter query results by disease')
+    parser.add_argument('--query-only', action='store_true',
+                        help='Only run query, skip loading embeddings')
 
     args = parser.parse_args()
 
@@ -337,37 +393,51 @@ def main():
     if args.clear:
         chroma_client.clear_collection()
 
-    # Load embeddings
-    logger.info("="*60)
-    logger.info("Loading Embeddings into ChromaDB")
-    logger.info("="*60)
+    # Load embeddings (unless query-only mode)
+    if not args.query_only:
+        logger.info("="*60)
+        logger.info("Loading Embeddings into ChromaDB")
+        logger.info("="*60)
 
-    total_loaded = chroma_client.load_embeddings_from_directory(args.embeddings_dir)
+        total_loaded = chroma_client.load_embeddings_from_directory(args.embeddings_dir)
 
-    # Print statistics
-    stats = chroma_client.get_statistics()
-    logger.info("\n" + "="*60)
-    logger.info("ChromaDB Statistics")
-    logger.info("="*60)
-    logger.info(f"Total Documents: {stats['total_documents']}")
-    logger.info(f"Collection: {stats['collection_name']}")
+        # Print statistics
+        stats = chroma_client.get_statistics()
+        logger.info("\n" + "="*60)
+        logger.info("ChromaDB Statistics")
+        logger.info("="*60)
+        logger.info(f"Total Documents: {stats['total_documents']}")
+        logger.info(f"Collection: {stats['collection_name']}")
 
-    if 'sample_diseases' in stats:
-        logger.info(f"Diseases (sample): {', '.join(stats['sample_diseases'][:10])}")
-    if 'sample_boroughs' in stats:
-        logger.info(f"Boroughs: {', '.join(stats['sample_boroughs'])}")
-    if 'severity_distribution' in stats:
-        logger.info(f"Severity Distribution: {stats['severity_distribution']}")
+        if 'sample_diseases' in stats:
+            logger.info(f"Diseases (sample): {', '.join(stats['sample_diseases'][:10])}")
+        if 'sample_boroughs' in stats:
+            logger.info(f"Boroughs: {', '.join(stats['sample_boroughs'])}")
+        if 'severity_distribution' in stats:
+            logger.info(f"Severity Distribution: {stats['severity_distribution']}")
 
     # Run test query if provided
     if args.query:
         logger.info("\n" + "="*60)
         logger.info(f"Test Query: '{args.query}'")
+        if args.borough:
+            logger.info(f"Filtering by Borough: {args.borough}")
+        if args.disease:
+            logger.info(f"Filtering by Disease: {args.disease}")
+        logger.info(f"Results: {args.n_results}")
         logger.info("="*60)
+
+        # Build where filter
+        where_filter = {}
+        if args.borough:
+            where_filter['borough'] = args.borough
+        if args.disease:
+            where_filter['diseases'] = {'$contains': args.disease}
 
         results = chroma_client.query(
             query_texts=[args.query],
-            n_results=5
+            n_results=args.n_results,
+            where=where_filter if where_filter else None
         )
 
         for i, (doc, metadata, distance) in enumerate(zip(
@@ -381,7 +451,8 @@ def main():
             logger.info(f"  Location: {metadata.get('neighborhood', 'N/A')}, {metadata.get('borough', 'N/A')}")
             logger.info(f"  Severity: {metadata.get('severity', 'N/A')}")
 
-    logger.info("\n✓ ChromaDB loading completed successfully!")
+    if not args.query_only:
+        logger.info("\n✓ ChromaDB loading completed successfully!")
 
 
 if __name__ == "__main__":

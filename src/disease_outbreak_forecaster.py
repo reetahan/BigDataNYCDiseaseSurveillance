@@ -4,8 +4,8 @@ Uses PySpark to process data from PostgreSQL and Prophet/statsmodels for forecas
 """
 import os
 import sys
-# Configure PySpark environment before any imports
-os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 --conf spark.driver.extraJavaOptions=-Djava.security.manager.allow=true --conf spark.executor.extraJavaOptions=-Djava.security.manager.allow=true pyspark-shell'
+# Configure PySpark environment before any imports - include PostgreSQL driver
+os.environ['PYSPARK_SUBMIT_ARGS'] = '--packages org.postgresql:postgresql:42.7.1 --conf spark.driver.extraJavaOptions=-Djava.security.manager.allow=true --conf spark.executor.extraJavaOptions=-Djava.security.manager.allow=true pyspark-shell'
 os.environ['SPARK_LOCAL_IP'] = '127.0.0.1'
 if sys.version_info >= (3, 0):
     os.environ['PYSPARK_PYTHON'] = sys.executable
@@ -27,6 +27,10 @@ import numpy as np
 from datetime import datetime, timedelta
 import warnings
 import platform
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 warnings.filterwarnings('ignore')
 
@@ -51,7 +55,8 @@ FORECAST_OUTPUT_SCHEMA = StructType([
 
 def forecast_prophet(neighborhood_data, forecast_days=14):
     """Standalone Prophet forecaster for Spark UDF"""
-    if len(neighborhood_data) < 14:
+    # Lower minimum from 14 to 7 days to capture more sparse data
+    if len(neighborhood_data) < 7:
         return None
 
     prophet_df = neighborhood_data[['date', 'case_count']].copy()
@@ -61,7 +66,7 @@ def forecast_prophet(neighborhood_data, forecast_days=14):
     model = Prophet(
         changepoint_prior_scale=0.05,
         seasonality_prior_scale=10,
-        daily_seasonality=True,
+        daily_seasonality=False,  # Disable daily for sparse data
         weekly_seasonality=True,
         yearly_seasonality=False
     )
@@ -320,10 +325,10 @@ class DiseaseOutbreakForecaster:
                                  .withColumn("rolling_std_7d", stddev("case_count").over(rolling_window))
         return df_featured
 
-    def forecast_all_neighborhoods(self, forecast_days=14, min_cases=10):
+    def forecast_all_neighborhoods(self, forecast_days=14, min_cases=2):
             """
             Generate forecasts for all neighborhoods (Driver-Side Loop Version)
-            Stable on Windows.
+            Stable on Windows. Lowered min_cases to 2 to capture sparse data.
             """
             # 1. Load Data using Spark (This is fast and fine)
             print("Loading data from database...")
@@ -392,7 +397,7 @@ class DiseaseOutbreakForecaster:
 
             return forecasts
 
-    def generate_outbreak_report(self, forecasts, output_file=r'forecast\outbreak_forecast.csv'):
+    def generate_outbreak_report(self, forecasts, output_file='data/forecast/outbreak_forecast.csv'):
         """Generate comprehensive outbreak forecast report (Preserved)"""
         report_data = []
 
@@ -452,15 +457,14 @@ class DiseaseOutbreakForecaster:
         self.spark.stop()
 
 
-# Example usage
 if __name__ == "__main__":
-    # Database configuration
+    # Database configuration from environment variables
     postgres_config = {
-        'host': 'localhost',
-        'port': '5432',
-        'database': 'disease_test_db',
-        'user': 'postgres',
-        'password': 'your_password'
+        'host': os.getenv('POSTGRES_HOST'),
+        'port': os.getenv('POSTGRES_PORT'),
+        'database': os.getenv('POSTGRES_DB'),
+        'user': os.getenv('POSTGRES_USER'),
+        'password': os.getenv('POSTGRES_PASSWORD')
     }
 
     # Initialize forecaster
@@ -468,10 +472,11 @@ if __name__ == "__main__":
 
     try:
         # Generate 14-day forecasts for all neighborhoods
+        # Lowered threshold to min_cases=2 to capture more sparse data patterns
         print("Generating disease outbreak forecasts...")
         forecasts = forecaster.forecast_all_neighborhoods(
             forecast_days=14,
-            min_cases=10
+            min_cases=2
         )
 
         # Generate comprehensive report

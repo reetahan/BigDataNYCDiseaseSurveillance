@@ -114,69 +114,88 @@ def scrape_reddit(subreddits=['nyc', 'AskNYC', 'newyorkcity', 'Brooklyn', 'Queen
 
     for sub_name in subreddits:
         print(f"\nScraping r/{sub_name}...")
-        subreddit = reddit.subreddit(sub_name)
         posts_found = 0
+        
+        try:
+            subreddit = reddit.subreddit(sub_name)
 
-        # Get recent posts
-        for post in subreddit.new(limit=max_posts):
-            post_date = datetime.fromtimestamp(post.created_utc)
+            # Get recent posts
+            for post in subreddit.new(limit=max_posts):
+                try:
+                    post_date = datetime.fromtimestamp(post.created_utc)
 
-            if post_date < start_date:
-                continue
+                    if post_date < start_date:
+                        continue
 
-            # Check if post is about health
-            if contains_health_keywords(post.title) or contains_health_keywords(post.selftext):
-
-                # Skip if already scraped
-                if post.id in existing_post_ids:
-                    continue
-
-                # Create post object
-                post_data = {
-                    'post_id': post.id,
-                    'subreddit': sub_name,
-                    'title': post.title,
-                    'author': str(post.author),
-                    'created_utc': post_date.isoformat(),
-                    'score': post.score,
-                    'num_comments': post.num_comments,
-                    'text': post.selftext,
-                    'url': post.url,
-                    'scraped_at': datetime.now().isoformat()
-                }
-
-                all_posts.append(post_data)
-                existing_post_ids.add(post.id)
-                posts_found += 1
-                new_posts += 1
-
-                # Get comments
-                post.comments.replace_more(limit=0)
-                for comment in post.comments.list()[:20]:  # Max 20 comments per post
-                    if contains_health_keywords(comment.body):
+                    # Check if post is about health
+                    if contains_health_keywords(post.title) or contains_health_keywords(post.selftext):
 
                         # Skip if already scraped
-                        if comment.id in existing_comment_ids:
+                        if post.id in existing_post_ids:
                             continue
 
-                        comment_data = {
-                            'comment_id': comment.id,
+                        # Create post object
+                        post_data = {
                             'post_id': post.id,
-                            'author': str(comment.author),
-                            'created_utc': datetime.fromtimestamp(comment.created_utc).isoformat(),
-                            'score': comment.score,
-                            'text': comment.body,
+                            'subreddit': sub_name,
+                            'title': post.title,
+                            'author': str(post.author),
+                            'created_utc': post_date.isoformat(),
+                            'score': post.score,
+                            'num_comments': post.num_comments,
+                            'text': post.selftext,
+                            'url': post.url,
                             'scraped_at': datetime.now().isoformat()
                         }
 
-                        all_comments.append(comment_data)
-                        existing_comment_ids.add(comment.id)
-                        new_comments += 1
+                        all_posts.append(post_data)
+                        existing_post_ids.add(post.id)
+                        posts_found += 1
+                        new_posts += 1
 
-                if posts_found % 10 == 0 and posts_found > 0:
-                    print(f"  Found {posts_found} new posts...")
+                        # Get comments with error handling
+                        try:
+                            post.comments.replace_more(limit=0)
+                            for comment in post.comments.list()[:20]:  # Max 20 comments per post
+                                try:
+                                    if contains_health_keywords(comment.body):
 
-        print(f"  ✓ r/{sub_name}: {posts_found} new posts")
+                                        # Skip if already scraped
+                                        if comment.id in existing_comment_ids:
+                                            continue
+
+                                        comment_data = {
+                                            'comment_id': comment.id,
+                                            'post_id': post.id,
+                                            'author': str(comment.author),
+                                            'created_utc': datetime.fromtimestamp(comment.created_utc).isoformat(),
+                                            'score': comment.score,
+                                            'text': comment.body,
+                                            'scraped_at': datetime.now().isoformat()
+                                        }
+
+                                        all_comments.append(comment_data)
+                                        existing_comment_ids.add(comment.id)
+                                        new_comments += 1
+                                except Exception as e:
+                                    # Skip problematic comments
+                                    continue
+                        except Exception as e:
+                            # Skip if can't load comments
+                            print(f"  ⚠ Could not load comments for post {post.id}")
+
+                        if posts_found % 10 == 0 and posts_found > 0:
+                            print(f"  Found {posts_found} new posts...")
+                            
+                except Exception as e:
+                    # Skip problematic posts
+                    continue
+
+            print(f"  ✓ r/{sub_name}: {posts_found} new posts")
+            
+        except Exception as e:
+            print(f"  ✗ r/{sub_name}: Failed - {str(e)}")
+            print(f"  Continuing with remaining subreddits...")
 
     # Save to JSON files
     save_json_data(all_posts, POSTS_JSON)
@@ -200,11 +219,32 @@ def scrape_reddit(subreddits=['nyc', 'AskNYC', 'newyorkcity', 'Brooklyn', 'Queen
     }
 
 if __name__ == "__main__":
-    # Scrape Reddit
+    # Scrape Reddit - includes borough and neighborhood subreddits
     results = scrape_reddit(
-        subreddits=['nyc', 'AskNYC', 'newyorkcity', 'Brooklyn', 'Queens', 'bronx', 'Manhattan', 'StatenIsland'],
-        days_back=300,      # Last 30 days
-        max_posts=1000      # Check 100 recent posts per subreddit
+        subreddits=[
+            # Main NYC subreddits
+            'nyc', 'AskNYC', 'newyorkcity',
+            
+            # Borough subreddits
+            'Brooklyn', 'Queens', 'bronx', 'Manhattan', 'StatenIsland',
+            
+            # Brooklyn neighborhoods
+            'Bushwick', 'williamsburg', 'greenpoint', 'ParkSlope', 
+            'BedStuy', 'CrownHeights', 'ProspectHeights', 'DUMBO',
+             'Flatbush',  'DowntownBrooklyn', 'ConeyIsland',
+            
+            # Manhattan neighborhoods
+            'upperwestside', 'uppereastside', 'Harlem', 'EastVillage',
+            'WestVillage', 'washingtonheights', 'lowereastside',
+            'columbia','nyu',
+            
+            # Queens neighborhoods
+            'astoria', 'longislandcity', 'Sunnyside', 'Ridgewood',
+            'ForestHills', 'Flushing', 'JacksonHeights', 'Bayside',
+            
+        ],
+        days_back=30,      # Last 30 days
+        max_posts=100      # Check 100 recent posts per subreddit
     )
 
     print(f"\n✓ Done! Found {results['new_posts']} new posts and {results['new_comments']} new comments")

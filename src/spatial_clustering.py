@@ -182,6 +182,9 @@ class SpatialClusteringAnalyzer:
 
         # Add location filter (only records with borough/neighborhood)
         query += " AND (borough IS NOT NULL OR neighborhood IS NOT NULL)"
+        
+        # Filter out records with no diseases (empty arrays)
+        query += " AND diseases IS NOT NULL AND array_length(diseases, 1) > 0"
 
         query += " ORDER BY timestamp DESC"
 
@@ -220,6 +223,14 @@ class SpatialClusteringAnalyzer:
 
         # Convert to Pandas for scikit-learn
         pdf = df.toPandas()
+        
+        logger.info(f"Converted Spark DF to Pandas: {len(pdf)} records")
+        logger.info(f"Columns: {pdf.columns.tolist()}")
+        
+        # Debug: Check disease field format
+        if len(pdf) > 0:
+            sample_diseases = pdf['diseases'].iloc[0]
+            logger.info(f"Sample diseases field type: {type(sample_diseases)}, value: {sample_diseases}")
 
         # Use actual latitude/longitude if available, otherwise map from borough
         pdf['lat'] = pdf.apply(
@@ -251,8 +262,35 @@ class SpatialClusteringAnalyzer:
 
         # Filter out records without coordinates
         pdf = pdf.dropna(subset=['lat', 'lon'])
+        
+        logger.info(f"After coordinate filter: {len(pdf)} records")
+        
+        # Additional filter: ensure we only cluster records with actual diseases
+        # Check various disease array formats (list, numpy array, string representations)
+        def has_diseases(diseases):
+            if diseases is None:
+                return False
+            # Check for numpy array
+            if hasattr(diseases, '__len__'):
+                return len(diseases) > 0
+            # Check for string representation
+            if isinstance(diseases, str):
+                return diseases not in ['[]', '', 'null', 'NULL']
+            return False
+        
+        initial_count = len(pdf)
+        pdf = pdf[pdf['diseases'].apply(has_diseases)]
+        filtered_count = len(pdf)
+        
+        logger.info(f"After disease filter: {filtered_count} records (removed {initial_count - filtered_count})")
 
-        logger.info(f"Prepared {len(pdf)} records with spatial features")
+        if filtered_count == 0:
+            logger.error("No records remaining after filtering! Check disease field format.")
+            if initial_count > 0:
+                logger.error(f"Sample disease values from filtered records:")
+                logger.error(pdf.head()['diseases'].tolist() if 'diseases' in pdf.columns else "No diseases column")
+
+        logger.info(f"Prepared {len(pdf)} records with spatial features and valid diseases")
 
         return pdf
 
@@ -444,15 +482,18 @@ class SpatialClusteringAnalyzer:
 
             cluster_data = pdf[pdf[cluster_col] == cluster_id]
             cluster_ids = cluster_data['id'].tolist()
+            
+            # Deduplicate IDs (same event may appear multiple times)
+            unique_cluster_ids = list(set(cluster_ids))
 
             try:
                 # Get embeddings for cluster members from ChromaDB
                 results = self.chroma_collection.get(
-                    ids=[str(cid) for cid in cluster_ids[:100]],  # Limit to 100 for performance
+                    ids=[str(cid) for cid in unique_cluster_ids[:100]],  # Limit to 100 for performance
                     include=['embeddings']
                 )
 
-                if results and results.get('embeddings'):
+                if results is not None and 'embeddings' in results and len(results['embeddings']) > 0:
                     embeddings = np.array(results['embeddings'])
 
                     # Calculate pairwise cosine similarities

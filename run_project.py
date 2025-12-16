@@ -267,7 +267,7 @@ def run_spatial_clustering():
     print_step(8, "SPATIAL CLUSTERING", "Analyzing geographic disease hotspots with DBSCAN")
 
     return run_command(
-        'python src/spatial_clustering.py --algorithm dbscan --eps-km 2.0 --min-samples 3',
+        'python src/analysis/spatial_clustering.py --algorithm dbscan --eps-km 2.0 --min-samples 3',
         "Running spatial clustering",
         timeout=180
     )
@@ -277,7 +277,7 @@ def run_outbreak_forecasting():
     print_step(9, "OUTBREAK FORECASTING", "Generating 14-day disease outbreak forecasts")
 
     return run_command(
-        'python src/disease_outbreak_forecaster.py',
+        'python src/analysis/disease_outbreak_forecaster.py',
         "Running outbreak forecasting",
         timeout=180
     )

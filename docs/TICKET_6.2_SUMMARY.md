@@ -1,5 +1,5 @@
 # Dashboard Advanced Features Implementation Summary
-**Tickets 6.2 & 6.3: Interactive Visualization & Analytics Tabs**
+**Tickets 6.2: Interactive Visualization & Analytics Tabs**
 
 ## Overview
 This document details the implementation of four advanced analytics tabs in the Streamlit dashboard beyond the main Overview page. Each tab provides specialized disease surveillance capabilities leveraging our Big Data pipeline's outputs.

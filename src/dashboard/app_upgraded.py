@@ -1038,7 +1038,7 @@ def render_spatial_clustering_section():
     cluster_data = load_latest_spatial_clusters()
 
     if cluster_data is None:
-        st.info("No spatial clustering data available. Run: `python src/spatial_clustering.py`")
+        st.info("No spatial clustering data available. Run: `python src/analysis/spatial_clustering.py`")
         return
 
     summary = get_cluster_summary(cluster_data)
@@ -1105,7 +1105,7 @@ def render_anomaly_detection_section():
     anomaly_df = load_anomaly_detection()
 
     if anomaly_df is None:
-        st.info("No anomaly data available. Run: `python src/anomaly_detection.py`")
+        st.info("No anomaly data available. Run: `python src/analysis/anomaly_detection.py`")
         return
 
     # Filter for significant anomalies
@@ -1205,7 +1205,7 @@ def render_outbreak_forecasting_section():
         
         **To generate forecasts:**
         ```bash
-        python src/disease_outbreak_forecaster.py
+        python src/analysis/disease_outbreak_forecaster.py
         ```
         
         The forecaster will only predict for neighborhood/disease pairs with sufficient historical data.

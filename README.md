@@ -30,85 +30,23 @@ NYC Disease Outbreak Surveillance provides hyperlocal disease monitoring for New
    # Edit .env with your credentials
    ```
 
-### Layer 1: Data Ingestion (Scrapers)
+3. Start all Docker containers (Kafka, Kafka UI, TimescaleDB):
+   ```bash
+   docker-compose up -d
+   ```
+   Wait a few seconds for all services to be ready.
 
-# Ticket 1.1: Reddit Scraper
+4. Run the project:
+   ```bash
+   python run_project.py
+   ```
+   This will run the whole project in one shot (may need to wait for certain consumers to finish).
+   You may also run the scrapers individually, the Spark consumers or individually or via the run_chained_project.py,
+   and set up the Postgres/Timescale DB via the psql_db_client.py options and ChromaDB via the chromadb_client.py,
+   then run the individual Spark analysis scripts in the analysis folder, and you can run the dashboard app in the
+   dashboard folder as 
+   ```bash
+   streamlit run app_upgraded.py
+   ```
 
-## Overview
-This module implements a scraper to scrape health-related posts from r/nyc and r/AskNYC
-
-
-#### Bluesky Social Media Scraper (Ticket 1.2)
-
-Scrapes Bluesky for health-related posts mentioning NYC.
-
-**Status:** ✅ Complete
-
-**Quick Run:**
-```bash
-python run_bluesky_scraper.py --mode single --query "sick NYC" --limit 50
-```
-
-**Documentation:** See [scrapers/bluesky/README.md](scrapers/bluesky/README.md)
-
-# Ticket 1.3: Local News RSS Scraper
-
-## Overview
-This module implements a scraper for Local NYC News RSS feeds (Gothamist, NY Post, NYT Region) to ingest health-related news articles into our pipeline.
-
-
-# Ticket 1.4: NYC Open Data & 311 Scraper
-
-## Overview
-This module ingests environmental health indicators (Rodent sightings, Sanitation issues, Food Poisoning complaints) from the NYC 311 Service Requests API via the Socrata Open Data standard.
-
-## Project Structure
-
-```
-BigDataNYCDiseaseSurveillance/
-├── scrapers/
-│   └── bluesky/           # Bluesky social media scraper
-│       ├── scraper.py     # Main scraper implementation
-│       ├── config.py      # Configuration management
-│       └── README.md      # Detailed documentation
-├── data/                  # Output data directory
-├── venv/                  # Python virtual environment
-├── requirements.txt       # Python dependencies
-├── .env.example          # Environment variables template
-└── run_bluesky_scraper.py # Main runner script
-```
-
-## Architecture
-
-The system consists of 5 layers:
-
-1. **Data Ingestion** - Web scrapers (Reddit, Bluesky, News, NYC Open Data, Health PDFs)
-2. **Streaming Layer** - Apache Kafka message broker
-3. **Processing** - Spark Streaming + LLM (GPT-4) integration
-4. **Storage** - S3 (raw), PostgreSQL/TimescaleDB (time-series), ChromaDB (embeddings)
-5. **Analytics** - Anomaly detection, spatial clustering, Plotly dashboard
-
-## Development Status
-
-### Layer 1: Data Ingestion
-- [x] Ticket 1.2: Bluesky Scraper (Steven) - **COMPLETE**
-- [x] Ticket 1.1: Reddit Scraper (Adhyayan)
-- [x] Ticket 1.3: Local News RSS Feeds (Devak)
-- [x] Ticket 1.4: NYC Open Data & 311 API (Devak) **COMPLETE**
-- [x] Ticket 1.5: Health Department PDF Scraping (Reetahan)
-
-
-# Ticket 4.1: S3 Data Archival Pipeline
-
-## Overview
-This module serves as the "Cold Path" for our data pipeline. While real-time data flows into Kafka (Layer 2), this script ensures raw reproducibility by archiving all scraped data to AWS S3.
-
-## Usage
-1. **Configure Credentials:**
-   Create a `.env` file in the root directory (see `.env.example`) and add your AWS keys:
-   ```ini
-   AWS_ACCESS_KEY_ID=your_key
-   AWS_SECRET_ACCESS_KEY=your_secret
-   AWS_BUCKET_NAME=your_bucket_name
-2. **Run the Uploader:**
-   python s3_uploader.py
+   

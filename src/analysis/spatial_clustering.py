@@ -1,3 +1,4 @@
+
 """
 Uses Spark and geospatial clustering algorithms (DBSCAN, K-Means) to identify:
 1. Geographic hotspots of disease outbreaks
@@ -15,6 +16,7 @@ import logging
 
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 from scipy.spatial.distance import cdist
 
 # PySpark
@@ -328,6 +330,12 @@ class SpatialClusteringAnalyzer:
         n_noise = list(pdf['cluster_id']).count(-1)
 
         logger.info(f"DBSCAN found {n_clusters} clusters, {n_noise} noise points")
+
+        # Visual comparison of clusters vs. noise points
+        try:
+            plot_dbscan_clusters(coords, pdf['cluster_id'].values)
+        except Exception as e:
+            logger.warning(f"Could not plot DBSCAN clusters: {e}")
 
         return pdf
 
@@ -762,6 +770,36 @@ def main():
         )
     finally:
         analyzer.stop()
+
+def plot_nyc_dbscan_clusters_scatter(pdf, cluster_col='cluster_id', ax=None):
+    """
+    Plot NYC DBSCAN clusters as a scatter plot (lat/lon axes, no shapefile required).
+    pdf: Pandas DataFrame with 'lat', 'lon', and cluster_col.
+    cluster_col: Name of the column with DBSCAN cluster labels.
+    ax: Optional matplotlib axis for dashboard integration.
+    """
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(10, 8))
+    unique_labels = sorted(pdf[cluster_col].unique())
+    colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(unique_labels))]
+    for k, col in zip(unique_labels, colors):
+        if k == -1:
+            marker = 'x'
+            label = 'Noise'
+            color = 'black'
+        else:
+            marker = 'o'
+            label = f'Cluster {k}'
+            color = col
+        mask = (pdf[cluster_col] == k)
+        ax.scatter(pdf.loc[mask, 'lon'], pdf.loc[mask, 'lat'], c=[color], marker=marker, label=label, edgecolors='k', s=60, alpha=0.7)
+    ax.set_title('NYC Disease Outbreak Clusters (DBSCAN)')
+    ax.set_xlabel('Longitude')
+    ax.set_ylabel('Latitude')
+    ax.legend()
+    plt.tight_layout()
+    if ax is None:
+        plt.show() 
 
 
 if __name__ == "__main__":
